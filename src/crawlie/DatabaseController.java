@@ -23,18 +23,18 @@ public class DatabaseController {
 		}
 	}
 
-	public void addPages(PageQueue pages) {
+	public void addPages(AnalyzedPages pages) {
 		String insertQuery = "insert into crawlie (title,url,domain,source) values (?,?,?,?)";
 		PreparedStatement ps;
 		try {
 			ps = conn.makeBatchUpdate(insertQuery);
 
-			for (Page page : pages) {
+			for (AnalyzedPage page : pages) {
 				try {
-					ps.setString(1, ((AnalyzedPage) page).TITLE);
-					ps.setString(2, ((AnalyzedPage) page).URL);
-					ps.setString(3, ((AnalyzedPage) page).DOMAIN);
-					ps.setString(4, ((AnalyzedPage) page).SOURCE.toString());
+					ps.setString(1, page.TITLE);
+					ps.setString(2, page.URL);
+					ps.setString(3, page.DOMAIN);
+					ps.setString(4, page.PARENT);
 					// ps.setString(4, "" + user.getLastLoggedIn());
 					ps.addBatch();
 				} catch (SQLException e) {

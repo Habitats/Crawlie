@@ -2,21 +2,21 @@ package crawlie;
 
 import java.util.ArrayList;
 
-import crawlie.Crawler.State;
-
 public class Crawlie {
-	private PageQueue analyzedPages;
-	private PageQueue discoveredPages;
+	private AnalyzedPages analyzedPages;
+	private final DiscoveredQueue discoveredPages;
 
-	public final int MAX_PAGES = 1000;
+	public final int MAX_PAGES = 20000;
 	public final int MAX_WORKERS = 50;
+	public final int CACHE_INTERVAL = 1000;
 	private long start;
-	private ArrayList<Crawler> crawlers;
-	private DatabaseController db;
+	private final ArrayList<Crawler> crawlers;
+	private final DatabaseController db;
 
 	public Crawlie() {
-		analyzedPages = new PageQueue();
-		discoveredPages = new PageQueue();
+		analyzedPages = new AnalyzedPages();
+		discoveredPages = new DiscoveredQueue();
+		crawlers = new ArrayList<Crawler>();
 		db = new DatabaseController();
 	}
 
@@ -24,16 +24,18 @@ public class Crawlie {
 		start = System.currentTimeMillis();
 
 		String seed = "http://www.vg.no";
-		AnalyzedPage seedPage = new AnalyzedPage(seed);
-		crawlers = new ArrayList<Crawler>();
+		DiscoveredPage seedPage = new DiscoveredPage(seed, "seed");
 
+		startWorkers();
+		discoveredPages.add(seedPage);
+	}
+
+	private void startWorkers() {
 		for (int i = 0; i < MAX_WORKERS; i++) {
 			Crawler crawler = new Crawler(this);
-			crawlers.add(crawler);
 			Thread crawlerThread = new Thread(crawler);
 			crawlerThread.start();
 		}
-		discoveredPages.add(seedPage);
 	}
 
 	public static void main(String[] args) {
@@ -41,27 +43,36 @@ public class Crawlie {
 		crawlie.init();
 	}
 
-	public PageQueue getAnalyzedPages() {
+	public AnalyzedPages getAnalyzedPages() {
 		return analyzedPages;
 	}
 
-	public PageQueue getDiscoveredPages() {
+	public DiscoveredQueue getDiscoveredPages() {
 		return discoveredPages;
 	}
 
-	public void analyze() {
+	// this gets called when all workers in a batch are done
+	public synchronized void analyzeBatch() {
 		if (!workersDone())
 			return;
 		db.addPages(analyzedPages);
-
+		if (analyzedPages.size() < MAX_PAGES) {
+			analyzedPages.dumpPages();
+			startWorkers();
+		}
 		Logger.log("Analyzed " + analyzedPages.size() + " pages, in " + (System.currentTimeMillis() - start) / 1000 + " seconds.");
+
 	}
 
 	private boolean workersDone() {
-		for (Crawler crawler : crawlers) {
-			if (crawler.state == State.WORKING)
-				return false;
-		}
-		return true;
+		return crawlers.isEmpty();
+	}
+
+	public synchronized void addWorker(Crawler crawler) {
+		crawlers.add(crawler);
+	}
+
+	public synchronized void removeWorker(Crawler crawler) {
+		crawlers.remove(crawler);
 	}
 }
