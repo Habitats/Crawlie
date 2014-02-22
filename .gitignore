@@ -98,4 +98,6 @@ Session.vim
 .netrwhist
 *~
 
-
+ignore/
+.db
+.cfg
