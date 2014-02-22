@@ -8,20 +8,22 @@ public class Crawlie {
 	private PageQueue analyzedPages;
 	private PageQueue discoveredPages;
 
-	public final int MAX_PAGES = 100;
-	public final int MAX_WORKERS = 20;
+	public final int MAX_PAGES = 1000;
+	public final int MAX_WORKERS = 50;
 	private long start;
 	private ArrayList<Crawler> crawlers;
+	private DatabaseController db;
 
 	public Crawlie() {
 		analyzedPages = new PageQueue();
 		discoveredPages = new PageQueue();
+		db = new DatabaseController();
 	}
 
 	private void init() {
 		start = System.currentTimeMillis();
 
-		String seed = "http://www.facebook.com";
+		String seed = "http://www.vg.no";
 		AnalyzedPage seedPage = new AnalyzedPage(seed);
 		crawlers = new ArrayList<Crawler>();
 
@@ -50,6 +52,7 @@ public class Crawlie {
 	public void analyze() {
 		if (!workersDone())
 			return;
+		db.addPages(analyzedPages);
 
 		Logger.log("Analyzed " + analyzedPages.size() + " pages, in " + (System.currentTimeMillis() - start) / 1000 + " seconds.");
 	}

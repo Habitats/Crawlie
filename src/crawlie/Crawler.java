@@ -16,13 +16,14 @@ public class Crawler implements Runnable {
 	public void run() {
 		state = State.WORKING;
 		while (crawlie.getAnalyzedPages().size() < crawlie.MAX_PAGES) {
+			// try to fetch a new page, if empty, thread will wait
 			Page page = crawlie.getDiscoveredPages().pop();
-			AnalyzedPage analyzedPage = null;
-			try {
-				analyzedPage = new AnalyzedPage(page.getUrl());
-			} catch (Exception e) {
-				System.out.println(page + page.getUrl());
-			}
+
+			// sometimes the page retruned is null. this is probably a bug
+			if (page == null)
+				continue;
+			AnalyzedPage analyzedPage = new AnalyzedPage(page.getUrl());
+
 			// Logger.log(analyzedPage.toString());
 			if (analyzedPage.SOURCE == null)
 				continue;

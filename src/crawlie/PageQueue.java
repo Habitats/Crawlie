@@ -5,12 +5,12 @@ import java.util.Iterator;
 import java.util.PriorityQueue;
 
 public class PageQueue implements Iterable<Page> {
-	private HashMap<String, Page> visited;
-	private PriorityQueue<Page> discovered;
+	private HashMap<String, Boolean> visited;
+	private PriorityQueue<Page> pages;
 
 	public PageQueue() {
-		visited = new HashMap<String, Page>();
-		discovered = new PriorityQueue<Page>();
+		visited = new HashMap<String, Boolean>();
+		pages = new PriorityQueue<Page>();
 
 	}
 
@@ -19,30 +19,35 @@ public class PageQueue implements Iterable<Page> {
 	}
 
 	public synchronized Page pop() {
-		if (discovered.size() == 0)
+		if (pages.size() == 0)
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		return discovered.poll();
+		Page page = pages.poll();
+		return page;
 	}
 
 	public synchronized void add(Page e) {
 		if (!visited(e.URL)) {
-			discovered.add(e);
-			visited.put(e.URL, e);
+			pages.add(e);
+			visited.put(e.URL, true);
 			notify();
 		}
 	}
 
+	public synchronized boolean empty() {
+		return size() == 0;
+	}
+
 	public synchronized int size() {
-		return discovered.size();
+		return pages.size();
 	}
 
 	@Override
 	public synchronized Iterator<Page> iterator() {
-		return discovered.iterator();
+		return pages.iterator();
 	}
 
 }

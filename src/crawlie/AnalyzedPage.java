@@ -7,9 +7,9 @@ import org.jsoup.select.Elements;
 
 public class AnalyzedPage extends Page {
 	public final Document SOURCE;
-	private final String TITLE;
-	private final String DOMAIN;
-	private final String PREFIX;
+	public final String TITLE;
+	public final String DOMAIN;
+	public final String PREFIX;
 
 	private PageQueue children;
 
