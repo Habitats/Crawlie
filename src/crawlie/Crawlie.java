@@ -6,9 +6,6 @@ public class Crawlie {
 	private AnalyzedPages analyzedPages;
 	private final DiscoveredQueue discoveredPages;
 
-	public final int MAX_PAGES = 20000;
-	public final int MAX_WORKERS = 50;
-	public final int CACHE_INTERVAL = 1000;
 	private long start;
 	private final ArrayList<Crawler> crawlers;
 	private final DatabaseController db;
@@ -23,15 +20,14 @@ public class Crawlie {
 	private void init() {
 		start = System.currentTimeMillis();
 
-		String seed = "http://www.vg.no";
-		DiscoveredPage seedPage = new DiscoveredPage(seed, "seed");
+		DiscoveredPage seedPage = new DiscoveredPage(Config.getInstance().getSeed(), "seed");
 
 		startWorkers();
 		discoveredPages.add(seedPage);
 	}
 
 	private void startWorkers() {
-		for (int i = 0; i < MAX_WORKERS; i++) {
+		for (int i = 0; i < Config.getInstance().getMaxWorkers(); i++) {
 			Crawler crawler = new Crawler(this);
 			Thread crawlerThread = new Thread(crawler);
 			crawlerThread.start();
@@ -56,7 +52,7 @@ public class Crawlie {
 		if (!workersDone())
 			return;
 		db.addPages(analyzedPages);
-		if (analyzedPages.size() < MAX_PAGES) {
+		if (analyzedPages.size() < Config.getInstance().getMaxPages()) {
 			analyzedPages.dumpPages();
 			startWorkers();
 		}

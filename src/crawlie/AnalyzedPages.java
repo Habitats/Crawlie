@@ -3,7 +3,7 @@ package crawlie;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class AnalyzedPages implements Iterable<AnalyzedPage> {
+public class AnalyzedPages  implements Iterable<AnalyzedPage> {
 	private ArrayList<AnalyzedPage> pages;
 	private int size;
 

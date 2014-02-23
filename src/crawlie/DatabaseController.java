@@ -7,8 +7,7 @@ public class DatabaseController {
 	private DatabaseConnection conn;
 
 	public DatabaseController() {
-		String cfgPath = "crawlie.cfg";
-		conn = new DatabaseConnection(cfgPath);
+		conn = new DatabaseConnection();
 
 		conn.initialize();
 		conn.createCleanDb();

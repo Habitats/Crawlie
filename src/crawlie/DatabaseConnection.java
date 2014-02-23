@@ -17,31 +17,18 @@ public class DatabaseConnection {
 	private final String url;
 	private final String user;
 	private final String password;
-	private final Properties prop;
 	private final String title;
 	private final String table;
 
 	private Connection conn;
 
-	public DatabaseConnection(String cfgPath) {
-		prop = loadConfig(cfgPath);
-		jdbcDriver = prop.getProperty("jdbcDriver");
-		url = prop.getProperty("url");
-		user = prop.getProperty("user");
-		title = prop.getProperty("title");
-		table = prop.getProperty("table");
-		password = prop.getProperty("password");
-
-	}
-
-	private Properties loadConfig(String path) {
-		Properties prop = new Properties();
-		try {
-			prop.load(new FileInputStream(new File(path)));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return prop;
+	public DatabaseConnection() {
+		jdbcDriver = Config.getInstance().getJdbcDriver();
+		url = Config.getInstance().getDatabaseUrl();
+		user = Config.getInstance().getDatabaseUser();
+		title = Config.getInstance().getDatabaseTitle();
+		table = Config.getInstance().getDatabaseTable();
+		password = Config.getInstance().getDatabasePassword();
 	}
 
 	public void createCleanDb() {

@@ -7,18 +7,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class AnalyzedPage {
+public class AnalyzedPage extends Page {
 	public final String PARENT;
 	public final Document SOURCE;
 	public final String TITLE;
 	public final String DOMAIN;
 	public final String PREFIX;
-	public final String URL;
 
 	private ArrayList<DiscoveredPage> children;
 
 	public AnalyzedPage(String url, String parent) {
-		URL = url;
+		super(url);
 		String title = "No title";
 		Document source = null;
 		PARENT = parent;

@@ -11,7 +11,7 @@ public class Crawler implements Runnable {
 	@Override
 	public void run() {
 		this.crawlie.addWorker(this);
-		while (crawlie.getAnalyzedPages().cacheSize() < crawlie.CACHE_INTERVAL) {
+		while (crawlie.getAnalyzedPages().cacheSize() < Config.getInstance().getCacheInterval()) {
 			// try to fetch a new page, if empty, thread will wait
 			DiscoveredPage page = crawlie.getDiscoveredPages().pop();
 
