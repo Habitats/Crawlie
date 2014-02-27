@@ -99,5 +99,6 @@ Session.vim
 *~
 
 ignore/
+files/
 *.db
 *.cfg
