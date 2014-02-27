@@ -15,7 +15,7 @@ public class Priority {
   // ########### SINGLETON #######################################
 
   public int contentHeuristic(AnalyzedPage page) {
-    if (page.SOURCE.text().split(" ").length < 200)
+    if (page.source.text().split(" ").length < 200)
       return 10;
     return 0;
   }
@@ -23,24 +23,29 @@ public class Priority {
   public int urlHeuristic(Page page) {
     int priority = 0;
 
-    if (page.URL.contains(".no/"))
+    if (page.url.contains(".no/"))
       priority += 3;
-    if (page.URL.contains("facebook.com"))
+    if (page.url.contains("facebook.com"))
       return 0;
-    if (page.URL.contains("penis"))
-      priority += 5;
-    if (page.URL.contains("tits"))
-      priority += 10;
-    if (page.URL.contains("ass"))
-      priority += 1;
-    if (page.URL.contains("sport"))
+    // if (page.URL.contains("penis"))
+    // priority += 5;
+    // if (page.URL.contains("tits"))
+    // priority += 10;
+    // if (page.URL.contains("ass"))
+    // priority += 1;
+    if (page.url.contains("sport"))
       priority -= 10;
-    if (page.URL.contains("#"))
+    if (page.url.contains("#"))
       priority -= 10;
-    if (page.URL.contains("="))
+    if (page.url.contains("="))
       priority -= 10;
-    if (page.URL.contains("?"))
+    if (page.url.contains("?"))
       priority -= 10;
+    if (page.suffix.matches(Config.getInstance().getDownloadFiletype())) {
+      Logger.log("[" + page.suffix + "] matches [" + Config.getInstance().getDownloadFiletype()
+          + "]? - " + page.suffix.matches(Config.getInstance().getDownloadFiletype()));
+      priority += 100;
+    }
     return priority;
   }
 }

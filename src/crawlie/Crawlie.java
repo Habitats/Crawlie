@@ -20,7 +20,7 @@ public class Crawlie {
   private void init() {
     start = System.currentTimeMillis();
 
-    DiscoveredPage seedPage = new DiscoveredPage(Config.getInstance().getSeed(), "seed");
+    DiscoveredPage seedPage = new DiscoveredPage(Config.getInstance().getSeed(), null, this);
 
     startWorkers();
     discoveredPages.add(seedPage);

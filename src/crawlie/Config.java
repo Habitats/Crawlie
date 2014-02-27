@@ -9,12 +9,9 @@ public class Config {
 
   private static Config instance;
 
-  private Properties prop;
-
-
 
   private Config() {
-    prop = loadConfig("crawlie.cfg");
+    prop = loadConfig("crawlie.properties");
 
     dbJdbcDriver = prop.getProperty("jdbcDriver");
     dbUrl = prop.getProperty("url");
@@ -27,6 +24,8 @@ public class Config {
     downloadFiletype = prop.getProperty("download_filetype");
     singleDomain = Boolean.parseBoolean(prop.getProperty("single_domain"));
     includeImages = Boolean.parseBoolean(prop.getProperty("include_images"));
+    storeContent = Boolean.parseBoolean(prop.getProperty("store_content"));
+    cahceAncestors = Boolean.parseBoolean(prop.getProperty("cache_ancestors"));
 
 
     maxPages = Integer.parseInt(prop.getProperty("max_pages"));
@@ -43,6 +42,8 @@ public class Config {
   }
 
   // ########### SINGLETON #######################################
+
+  private Properties prop;
 
   // DATABASE
   private String dbJdbcDriver;
@@ -61,6 +62,8 @@ public class Config {
   private String downloadFiletype;
   private String downloadLocation;
   private boolean includeImages;
+  private boolean storeContent;
+  private boolean cahceAncestors;
 
   private Properties loadConfig(String path) {
     prop = new Properties();
@@ -130,5 +133,12 @@ public class Config {
 
   public boolean includeImages() {
     return includeImages;
+  }
+
+  public boolean storeContent() {
+    return storeContent;
+  }
+  public boolean cacheAncestors() {
+    return cahceAncestors;
   }
 }

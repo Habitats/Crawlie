@@ -16,8 +16,8 @@ public class DatabaseController {
   public void addPage(AnalyzedPage page) {
 
     try {
-      conn.execute(String.format("insert into crawlie values (%s,%s,%s,%s,%s)", page.TITLE,
-          page.URL, page.DOMAIN, page.SOURCE, page.getPriority()));
+      conn.execute(String.format("insert into crawlie values (%s,%s,%s,%s,%s)", page.title,
+          page.url, page.domain, page.source, page.getPriority()));
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -32,10 +32,10 @@ public class DatabaseController {
 
       for (AnalyzedPage page : pages) {
         try {
-          ps.setString(1, page.TITLE);
-          ps.setString(2, page.URL);
-          ps.setString(3, page.DOMAIN);
-          ps.setString(4, page.PARENT);
+          ps.setString(1, page.title);
+          ps.setString(2, page.url);
+          ps.setString(3, page.domain);
+//          ps.setString(4, page.parent);
           ps.setInt(5, page.getPriority());
           // ps.setString(4, "" + user.getLastLoggedIn());
           ps.addBatch();

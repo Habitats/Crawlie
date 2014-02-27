@@ -12,21 +12,15 @@ public class Crawler implements Runnable {
   public void run() {
     this.crawlie.addWorker(this);
     while (crawlie.getAnalyzedPages().cacheSize() < Config.getInstance().getCacheInterval()) {
+
       // try to fetch a new page, if empty, thread will wait
-      DiscoveredPage page = crawlie.getDiscoveredPages().pop();
-
-      // sometimes the page retruned is null. this is probably a bug
-      if (page == null)
-        continue;
-      AnalyzedPage analyzedPage = new AnalyzedPage(page.URL, page.PARENT, page.getPriority());
-
-      // Logger.log(analyzedPage.toString());
-      if (analyzedPage.SOURCE == null)
-        continue;
-      for (DiscoveredPage child : analyzedPage.getChildren()) {
-        crawlie.getDiscoveredPages().add(child);
+      Page page = PageFactory.convertPage(crawlie.getDiscoveredPages().pop());
+      if (crawlie.getAnalyzedPages().size() >= Config.getInstance().getMaxPages()) {
+        return;
       }
-      crawlie.getAnalyzedPages().add(analyzedPage);
+
+      Logger.log("Analysing: " + page.toString());
+      page.analyze();
     }
     // Logger.log("Worker done!");
     crawlie.removeWorker(this);

@@ -2,14 +2,7 @@ package crawlie;
 
 import java.util.ArrayList;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,47 +11,40 @@ import org.jsoup.select.Elements;
 
 
 public class AnalyzedPage extends Page {
-  public final String PARENT;
-  public final Document SOURCE;
-  public final String TITLE;
+  public final Document source;
+  public final String title;
 
-  private ArrayList<DiscoveredPage> children;
+  private ArrayList<Page> children;
 
-  public AnalyzedPage(String url, String parent, int priority) {
-    super(url);
+  public AnalyzedPage(String url, Page parent, Crawlie crawlie) {
+    super(url, parent, crawlie);
     super.priority = priority;
     String title = "No title";
     Document source = null;
-    PARENT = parent;
-    // Logger.log("[" + super.SUFFIX + "] matches [" + Config.getInstance().getDownloadFiletype() +
-    // "]? - "
-    // + super.SUFFIX.matches(Config.getInstance().getDownloadFiletype()));
+
     try {
-      if (super.SUFFIX.matches(Config.getInstance().getDownloadFiletype())) {
-        storeFile(url);
-      } else {
-        source = Jsoup.connect(url).get();
-        title = source.select("title").text();
-      }
-    } catch (IOException e) {
+      source = Jsoup.connect(url).get();
+      title = source.select("title").text();
+    } catch (IOException | IllegalArgumentException e) {
       Logger.error("Unable to load page: " + url);
     }
 
-    SOURCE = source;
-    TITLE = title;
+    this.source = source;
+    this.title = title;
   }
 
-  public ArrayList<DiscoveredPage> getChildren() {
+  public ArrayList<Page> getChildren() {
     if (children == null) {
-      children = new ArrayList<DiscoveredPage>();
-      Elements links = SOURCE.select("a[href]");
+      children = new ArrayList<Page>();
+      Elements links = source.select("a[href]");
       for (Element child : links) {
         // remove unecessary stuff from URL
         String url = child.attr("abs:href");
-        addChildren(child, url);
+        if (!FileManager.isFile(url))
+          addChildren(child, url);
       }
       if (Config.getInstance().includeImages()) {
-        Elements images = SOURCE.select("img[src]");
+        Elements images = source.select("img[src]");
         for (Element img : images) {
           String url = img.attr("abs:src");
           // url = url.split("\\?|=|#")[0];
@@ -70,31 +56,22 @@ public class AnalyzedPage extends Page {
   }
 
   private void addChildren(Element e, String url) {
-    if (e.val().startsWith("/"))
-      url = PREFIX + "//" + DOMAIN + url;
-    DiscoveredPage newPage = new DiscoveredPage(url, URL);
+    // if (e.val().startsWith("/"))
+    // url = prefix + "//" + domain + url;
+    Page newPage = PageFactory.createPage(url, this, crawlie);
     children.add(newPage);
   }
 
-  private synchronized void storeFile(String url) throws IOException {
-    String name = url.substring(url.lastIndexOf("/") + 1);
-    String folder = Config.getInstance().getDownloadLocation() + "/";
-
-    InputStream in = (new URL(url)).openStream();
-
-    if (!new File(folder).exists())
-      new File(folder);
-    OutputStream out = new BufferedOutputStream(new FileOutputStream(folder + name));
-
-    for (int b; (b = in.read()) != -1;) {
-      out.write(b);
-    }
-    out.close();
-    in.close();
-  }
-
   @Override
-  public String toString() {
-    return String.format("Title: %s - URL: %s", TITLE, URL);
+  public void analyze() {
+    if (source == null)
+      return;
+    if (crawlie.getAnalyzedPages().size() >= Config.getInstance().getMaxPages()) {
+      return;
+    }
+    crawlie.getAnalyzedPages().add(this);
+    for (Page child : getChildren()) {
+      child.analyze();
+    }
   }
 }

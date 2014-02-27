@@ -1,35 +1,47 @@
 package crawlie;
 
-public class Page {
-  public final String URL;
-  public final String DOMAIN;
-  public final String PREFIX;
-  public final String SUFFIX;
+public abstract class Page {
+  public final String url;
+  public final String domain;
+  public final String prefix;
+  public final String suffix;
+  public final Page parent;
 
   protected int priority;
+  protected final Crawlie crawlie;
 
-  public Page(String url) {
-    URL = url;
+  public Page(String url, Page parent, Crawlie crawlie) {
+    this.parent = parent;
+    this.url = url;
+    this.crawlie = crawlie;
 
     String prefix;
     String domain;
     String suffix;
     try {
-      prefix = URL.split("/")[0].toLowerCase();
-      domain = URL.split("/")[2].toLowerCase();
-      suffix = URL.substring(URL.lastIndexOf(".") + 1).toLowerCase();
+      prefix = url.split("/")[0].toLowerCase();
+      domain = url.split("/")[2].toLowerCase();
+      suffix = url.substring(url.lastIndexOf(".") + 1).toLowerCase();
     } catch (Exception e) {
       prefix = "NONE";
       domain = "NONE";
       suffix = "NONE";
     }
-    PREFIX = prefix;
-    DOMAIN = domain;
-    SUFFIX = suffix;
+    this.prefix = prefix;
+    this.domain = domain;
+
+    this.suffix = suffix;
   }
 
   public int getPriority() {
     return priority;
   }
 
+  @Override
+  public String toString() {
+    return String.format("URL: %s", url);
+  }
+
+
+  public abstract void analyze();
 }

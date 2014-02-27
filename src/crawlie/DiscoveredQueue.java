@@ -25,29 +25,35 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage> {
     return visited.get(url) != null;
   }
 
-  public synchronized DiscoveredPage pop() {
-    if (pages.size() == 0)
+  public synchronized Page pop() {
+    Page page;
+
+    while (pages.size() == 0)
       try {
         wait();
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-    DiscoveredPage page = pages.pollFirst();
+    page = pages.pollFirst();
     return page;
   }
 
   public synchronized void add(DiscoveredPage e) {
-    if (!visited(e.URL)) {
-      if (Config.getInstance().singleDomain() && !Config.getInstance().getSeed().contains(e.DOMAIN)) {
+    if (!visited(e.url)) {
+      if (Config.getInstance().singleDomain() && !Config.getInstance().getSeed().contains(e.domain)) {
         return;
       }
 
       pages.add(e);
-      visited.put(e.URL, true);
+      addVisited(e);
       // if (pages.size() >= MAX_SIZE)
       // pages.removeLast();
-      notify();
+      notifyAll();
     }
+  }
+
+  public synchronized void addVisited(Page page) {
+    visited.put(page.url, true);
   }
 
   public synchronized int size() {

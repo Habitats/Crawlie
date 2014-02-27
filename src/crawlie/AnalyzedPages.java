@@ -12,8 +12,10 @@ public class AnalyzedPages implements Iterable<AnalyzedPage> {
   }
 
   public synchronized void add(AnalyzedPage e) {
-    pages.add(e);
     size += 1;
+    if (Config.getInstance().storeContent()) {
+      pages.add(e);
+    }
   }
 
   public synchronized int size() {
