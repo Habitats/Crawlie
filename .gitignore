@@ -98,7 +98,7 @@ Session.vim
 .netrwhist
 *~
 
-ignore
-files
+[iI]gnore/*
+[Ff]iles/*
 *.db
 *.cfg
