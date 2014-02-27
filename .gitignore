@@ -1,3 +1,9 @@
+ignore/
+files/
+*.db
+*.cfg
+
+
 ####################### Eclipse ################################
 *.pydevproject
 .project
