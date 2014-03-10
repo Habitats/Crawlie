@@ -9,7 +9,7 @@ import crawlie.Priority;
  * 
  */
 public class DiscoveredPage extends Page implements Comparable<DiscoveredPage> {
-
+  private static final long serialVersionUID = 2029011951639900955L;
 
   public DiscoveredPage(String url, Page parent, AnalyzedPages analyzedPages,
       DiscoveredQueue discoveredQueue) {

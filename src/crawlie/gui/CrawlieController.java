@@ -14,6 +14,12 @@ import crawlie.Crawlie;
 import crawlie.Logger;
 
 
+/**
+ * GUI imeplemented with classic MVC, this being the controller
+ * 
+ * @author Patrick
+ * 
+ */
 public class CrawlieController implements ActionListener, Observer {
 
   private CrawlieModel model;

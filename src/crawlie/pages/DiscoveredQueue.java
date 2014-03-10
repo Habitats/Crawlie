@@ -21,6 +21,8 @@ import crawlie.Config;
  * 
  */
 public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
+  private static final long serialVersionUID = -8067373472278549730L;
+
   private HashMap<String, Boolean> visited;
   private transient MinMaxPriorityQueue<DiscoveredPage> pages;
   private final int MAX_SIZE = 10000;

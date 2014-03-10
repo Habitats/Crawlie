@@ -5,11 +5,10 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 public class CrawlieFrame extends JFrame {
+  private static final long serialVersionUID = 3215696573774506119L;
 
   public CrawlieFrame(CrawlieView panel) {
-
-    // setTitle("Server Bro v0.1");
-
+    setTitle("Crawlie");
     add(panel);
 
     buildFrame(this);
@@ -22,13 +21,8 @@ public class CrawlieFrame extends JFrame {
     frame.pack();
 
     frame.setLocationRelativeTo(frame.getRootPane());
-    // frame.setLocation(0, 0);
-    // frame.setSize(new Dimension(800, 500));
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-    // frame.setResizable(false);
     frame.setVisible(true);
-
   }
-
 }

@@ -6,6 +6,8 @@ import java.io.Serializable;
  * When a discovered page is cached, it is stored as an instance of a subclass of this class
  */
 public abstract class Page implements Serializable {
+  private static final long serialVersionUID = 4547183824431052054L;
+
   public final String url;
   public final String domain;
   public final String prefix;

@@ -39,8 +39,10 @@ public class Priority {
   public int urlHeuristic(Page page) {
     int priority = 0;
 
-    if (page.url.contains(".no/"))
-      priority += 3;
+//    if (page.url.contains(".no/"))
+//      priority += 3;
+    if (page.url.contains("telenor"))
+      priority += 9;
     if (page.url.contains("sport"))
       priority -= 10;
 

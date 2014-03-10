@@ -12,6 +12,8 @@ import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 
 public class CrawlieView extends JPanel implements Observer {
+  private static final long serialVersionUID = -8336882687395127678L;
+
   public static final String START = "START";
   public static final String PAUSE = "PAUSE";
   public static final String RESET = "RESET";

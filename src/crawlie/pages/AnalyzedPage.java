@@ -20,6 +20,8 @@ import crawlie.pages.Page;
  * 
  */
 public class AnalyzedPage extends Page {
+  private static final long serialVersionUID = -4212043927105278607L;
+
   public transient final Document source;
   public final String title;
 

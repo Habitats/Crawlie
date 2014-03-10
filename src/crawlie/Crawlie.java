@@ -1,13 +1,12 @@
 package crawlie;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import crawlie.database.DatabaseController;
 import crawlie.pages.AnalyzedPages;
 import crawlie.pages.DiscoveredPage;
 import crawlie.pages.DiscoveredQueue;
 
-public class Crawlie implements Serializable {
+public class Crawlie {
   private AnalyzedPages analyzedPages;
   private DiscoveredQueue discoveredPages;
 
