@@ -1,5 +1,16 @@
 package crawlie;
 
+import crawlie.pages.AnalyzedPage;
+import crawlie.pages.Page;
+
+/**
+ * Heuristic class to handle the priority of content and URL's.
+ * 
+ * Should be rather easy to extend and manipulate without causing havoc
+ * 
+ * @author Patrick
+ * 
+ */
 public class Priority {
 
   private static Priority instance;
@@ -20,34 +31,36 @@ public class Priority {
     return 0;
   }
 
+  /**
+   * Generates a heuristic value based on a page's URL
+   * 
+   * @return heuristic value
+   */
   public int urlHeuristic(Page page) {
     int priority = 0;
 
     if (page.url.contains(".no/"))
       priority += 3;
-    if (page.url.contains("facebook.com"))
-      return 0;
-    // if (page.URL.contains("penis"))
-    // priority += 5;
-    // if (page.URL.contains("tits"))
-    // priority += 10;
-    // if (page.URL.contains("ass"))
-    // priority += 1;
-    if (page.url.toLowerCase().contains("porn"))
-      priority += 10;
-    if (page.url.contains("comments"))
-      priority -= 20;
     if (page.url.contains("sport"))
       priority -= 10;
+
+    // avoid facebook, unless you want to get stuck crawling facebook...
+    if (page.url.contains("facebook.com"))
+      priority -= 10;
+    // avoid urls that include #, =, ? and other funny characters, as these are probably just
+    // modifiers for already accessed urls
     if (page.url.contains("#"))
       priority -= 10;
     if (page.url.contains("="))
       priority -= 10;
     if (page.url.contains("?"))
       priority -= 10;
+
+    // if page matches one of the filetypes marked for download
     if (page.suffix.matches(Config.getInstance().getDownloadFiletype())) {
-      Logger.log("[" + page.suffix + "] matches [" + Config.getInstance().getDownloadFiletype()
-          + "]? - " + page.suffix.matches(Config.getInstance().getDownloadFiletype()));
+      Logger.getInstance().log(
+          "[" + page.suffix + "] matches [" + Config.getInstance().getDownloadFiletype() + "]? - "
+              + page.suffix.matches(Config.getInstance().getDownloadFiletype()));
       priority += 100;
     }
     return priority;

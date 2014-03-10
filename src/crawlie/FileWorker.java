@@ -8,6 +8,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
+
+/**
+ * Worker class for downloading files and storing themn in a desired directory. Having only one
+ * thread doing this is painfully slow.
+ * 
+ * Workers work according to the producer/consumer principle
+ * 
+ * @author Patrick
+ * 
+ */
 public class FileWorker implements Runnable {
   private String folder;
   private FileManager fileManager;
@@ -34,9 +44,9 @@ public class FileWorker implements Runnable {
         }
         out.close();
         in.close();
-        Logger.log("Stored file: " + name);
+        Logger.getInstance().log("Stored file: " + name);
       } catch (IOException e) {
-        Logger.error("Failed to download: " + file);
+        Logger.getInstance().error("Failed to download: " + file);
       }
     }
   }

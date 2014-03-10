@@ -2,6 +2,15 @@ package crawlie;
 
 import java.util.ArrayList;
 
+
+/**
+ * Singleton for general purpose file utility methods
+ * 
+ * It holds a set of file workers that will take an url and store them on the disk accordingly
+ * 
+ * @author Patrick
+ * 
+ */
 public class FileManager {
   private static FileManager instance;
 
@@ -15,9 +24,11 @@ public class FileManager {
 
   private ArrayList<String> filesToStore;
 
-  private FileManager() {
+  private FileManager() {}
+
+  public void initFileManager() {
     filesToStore = new ArrayList<String>();
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < Config.getInstance().getMaxFileWorkers(); i++) {
       Thread fw =
           new Thread(new FileWorker(this, Config.getInstance().getDownloadLocation() + "/"));
       fw.setName("FileWorker " + i);
@@ -53,6 +64,6 @@ public class FileManager {
   }
 
   public boolean running() {
-    return true;
+    return !Config.getInstance().isPaused();
   }
 }

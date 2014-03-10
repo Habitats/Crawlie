@@ -5,6 +5,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Singleton to handle the configuration of the crawler
+ * 
+ * @author Patrick
+ * 
+ */
 public class Config {
 
   private static Config instance;
@@ -27,11 +33,12 @@ public class Config {
     storeContent = Boolean.parseBoolean(prop.getProperty("store_content"));
     cahceAncestors = Boolean.parseBoolean(prop.getProperty("cache_ancestors"));
 
-
     maxPages = Integer.parseInt(prop.getProperty("max_pages"));
     maxWorkers = Integer.parseInt(prop.getProperty("max_workers"));
+    maxFileWorkers = Integer.parseInt(prop.getProperty("max_file_workers"));
     cacheInterval = Integer.parseInt(prop.getProperty("cache_interval"));
     seed = prop.getProperty("seed");
+
 
   }
 
@@ -56,6 +63,7 @@ public class Config {
   // GENERAL
   private int maxPages;
   private int maxWorkers;
+  private int maxFileWorkers;
   private int cacheInterval;
   private String seed;
   private boolean singleDomain;
@@ -64,6 +72,11 @@ public class Config {
   private boolean includeImages;
   private boolean storeContent;
   private boolean cahceAncestors;
+
+  private boolean paused = false;
+  private String serializedFileName = "serialized.obj";
+
+
 
   private Properties loadConfig(String path) {
     prop = new Properties();
@@ -138,7 +151,25 @@ public class Config {
   public boolean storeContent() {
     return storeContent;
   }
+
   public boolean cacheAncestors() {
     return cahceAncestors;
+  }
+
+  public boolean isPaused() {
+    return paused;
+  }
+
+  public void setPaused(boolean paused) {
+    this.paused = paused;
+    Logger.getInstance().log("PAUSED SET TO " + Boolean.toString(paused));
+  }
+
+  public String getSerializedFile() {
+    return serializedFileName;
+  }
+
+  public int getMaxFileWorkers() {
+    return maxFileWorkers;
   }
 }
