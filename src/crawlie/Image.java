@@ -8,8 +8,8 @@ public class Image extends Page {
 
   @Override
   public void analyze() {
+    FileManager.getInstance().storeFile(super.url);
     crawlie.getDiscoveredPages().addVisited(this);
-    FileManager.storeFile(super.url);
   }
 
   @Override

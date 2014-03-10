@@ -33,6 +33,10 @@ public class Priority {
     // priority += 10;
     // if (page.URL.contains("ass"))
     // priority += 1;
+    if (page.url.toLowerCase().contains("porn"))
+      priority += 10;
+    if (page.url.contains("comments"))
+      priority -= 20;
     if (page.url.contains("sport"))
       priority -= 10;
     if (page.url.contains("#"))

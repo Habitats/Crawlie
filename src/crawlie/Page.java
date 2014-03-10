@@ -39,7 +39,7 @@ public abstract class Page {
 
   @Override
   public String toString() {
-    return String.format("URL: %s", url);
+    return String.format("Priority: %4d - URL: %s", priority, url);
   }
 
 

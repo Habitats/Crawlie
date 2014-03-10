@@ -30,6 +30,7 @@ public class Crawlie {
     for (int i = 0; i < Config.getInstance().getMaxWorkers(); i++) {
       Crawler crawler = new Crawler(this);
       Thread crawlerThread = new Thread(crawler);
+      crawlerThread.setName("CrawlerThread " + i);
       crawlerThread.start();
     }
   }

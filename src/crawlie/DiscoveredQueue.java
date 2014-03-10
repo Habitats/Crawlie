@@ -21,7 +21,7 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage> {
     pages = MinMaxPriorityQueue.maximumSize(MAX_SIZE).create();
   }
 
-  private synchronized boolean visited(String url) {
+  public synchronized boolean visited(String url) {
     return visited.get(url) != null;
   }
 
@@ -39,17 +39,14 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage> {
   }
 
   public synchronized void add(DiscoveredPage e) {
-    if (!visited(e.url)) {
-      if (Config.getInstance().singleDomain() && !Config.getInstance().getSeed().contains(e.domain)) {
-        return;
-      }
-
-      pages.add(e);
-      addVisited(e);
-      // if (pages.size() >= MAX_SIZE)
-      // pages.removeLast();
-      notifyAll();
+    if (Config.getInstance().singleDomain() && !Config.getInstance().getSeed().contains(e.domain)) {
+      return;
     }
+
+    pages.add(e);
+    // if (pages.size() >= MAX_SIZE)
+    // pages.removeLast();
+    notifyAll();
   }
 
   public synchronized void addVisited(Page page) {

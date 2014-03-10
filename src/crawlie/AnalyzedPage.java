@@ -16,7 +16,7 @@ public class AnalyzedPage extends Page {
 
   private ArrayList<Page> children;
 
-  public AnalyzedPage(String url, Page parent, Crawlie crawlie) {
+  public AnalyzedPage(String url, Page parent, Crawlie crawlie, int priority) {
     super(url, parent, crawlie);
     super.priority = priority;
     String title = "No title";
@@ -40,8 +40,8 @@ public class AnalyzedPage extends Page {
       for (Element child : links) {
         // remove unecessary stuff from URL
         String url = child.attr("abs:href");
-        if (!FileManager.isFile(url))
-          addChildren(child, url);
+        // if (!FileManager.getInstance().isFile(url))
+        addChildren(child, url);
       }
       if (Config.getInstance().includeImages()) {
         Elements images = source.select("img[src]");
@@ -58,8 +58,11 @@ public class AnalyzedPage extends Page {
   private void addChildren(Element e, String url) {
     // if (e.val().startsWith("/"))
     // url = prefix + "//" + domain + url;
-    Page newPage = PageFactory.createPage(url, this, crawlie);
-    children.add(newPage);
+    if (!crawlie.getDiscoveredPages().visited(url)) {
+      Page newPage = PageFactory.createPage(url, this, crawlie);
+      crawlie.getDiscoveredPages().addVisited(newPage);
+      children.add(newPage);
+    }
   }
 
   @Override
