@@ -73,6 +73,8 @@ public class CrawlerController {
 
       // set paused to true in order to avoid disregarding the cached data
       Logger.getInstance().status("Deserialzing finished!");
+      Logger.getInstance().status("Resumed discovered pages: " + discoveredPages.getVisitedSize());
+      Logger.getInstance().status("Resumed analyzed pages: " + analyzedPages.size());
     } catch (IOException e) {
       Logger.getInstance().status("Deserialzing failed! Possible corruption");
     }

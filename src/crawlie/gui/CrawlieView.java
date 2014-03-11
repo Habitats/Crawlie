@@ -4,9 +4,6 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.text.DefaultCaret;
-
 import crawlie.Message;
 
 /**
@@ -43,9 +40,9 @@ public class CrawlieView extends JPanel implements CrawlieListener {
     initCache = new JButton(INITIALIZE_CACHE);
     initCache.setName(INITIALIZE_CACHE);
 
-    statusArea = createScrollableArea();
-    errorArea = createScrollableArea();
-    logArea = createScrollableArea();
+    statusArea = new ContinuousFeedArea();
+    errorArea = new ContinuousFeedArea();
+    logArea = new ContinuousFeedArea();
 
 
     setLayout(new GridBagLayout());
@@ -54,23 +51,15 @@ public class CrawlieView extends JPanel implements CrawlieListener {
     setMinimumSize(dim);
     setMaximumSize(dim);
 
-    add(new JScrollPane(statusArea), new GBC(0, 3).setSpan(4, 2).setWeight(0.9, 0.3));
-    add(new JScrollPane(errorArea), new GBC(2, 1).setSpan(2, 2).setWeight(.9, 0.8));
-    add(new JScrollPane(logArea), new GBC(0, 1).setSpan(2, 2).setWeight(0.8, 0.8));
+    add(statusArea, new GBC(0, 3).setSpan(4, 2));
+    add(errorArea, new GBC(2, 1).setSpan(2, 2).setWeight(.9, 0.8));
+    add(logArea, new GBC(0, 1).setSpan(2, 2).setWeight(0.8, 0.8));
 
     add(start, new GBC(0, 0).setWeight(0.3, 0));
     add(pause, new GBC(1, 0).setWeight(0.3, 0));
     add(reset, new GBC(2, 0).setWeight(0.3, 0));
     add(initCache, new GBC(3, 0).setWeight(0.3, 0));
 
-  }
-
-  private ContinuousFeedArea createScrollableArea() {
-    ContinuousFeedArea textArea = new ContinuousFeedArea();
-    // enable auto scrolling
-    DefaultCaret caret = (DefaultCaret) textArea.getCaret();
-    caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-    return textArea;
   }
 
   public void addController(CrawlieGuiController controller) {

@@ -70,17 +70,17 @@ public class CrawlieGuiController implements ActionListener, Observer {
     if (sourceName.equals(CrawlieView.STOP)) {
       if (!Config.getInstance().isPaused()) {
         Logger.getInstance().status("Serialzing and storing the current data... Please wait while file workers finish downloading!");
+
+        // pause the parser. the worker threads depend upon this variable and will try and finish
+        // their current workload before pausing
+        Config.getInstance().setPaused(true);
+
+        // to avoid people clicking on stuff when they shouldn't click on stuff. crawler will
+        // automatically unlock when it's done
+        Config.getInstance().setGuiLock(true);
       } else {
         Logger.getInstance().status("No crawler running!");
       }
-
-      // pause the parser. the worker threads depend upon this variable and will try and finish
-      // their current workload before pausing
-      Config.getInstance().setPaused(true);
-
-      // to avoid people clicking on stuff when they shouldn't click on stuff. crawler will
-      // automatically unlock when it's done
-      Config.getInstance().setGuiLock(true);
     }
 
     // if crawler is ready, attempt to start a new instance, or resume the previous one

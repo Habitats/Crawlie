@@ -1,7 +1,11 @@
 package crawlie.gui;
 
+import java.awt.Dimension;
+
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.Document;
 
 /**
@@ -11,13 +15,21 @@ import javax.swing.text.Document;
  * @author Patrick
  * 
  */
-public class ContinuousFeedArea extends JTextPane {
+public class ContinuousFeedArea extends JScrollPane {
   private static final long serialVersionUID = -3892971130305387962L;
 
   private int maxLength = 1000;
 
+  private JTextPane pane;
+
   public ContinuousFeedArea() {
-    getDocument().addDocumentListener(new LimitLinesDocumentListener(maxLength));
+    super(new JTextPane());
+    pane = (JTextPane) getViewport().getView();
+    autoScroll(pane);
+    pane.getDocument().addDocumentListener(new LimitLinesDocumentListener(maxLength));
+    setMinimumSize(new Dimension(300, 150));
+    setMaximumSize(new Dimension(300, 800));
+    setPreferredSize(new Dimension(300, 350));
   }
 
   /**
@@ -26,11 +38,17 @@ public class ContinuousFeedArea extends JTextPane {
    */
   public synchronized void append(String str) {
     try {
-      Document doc = getDocument();
+      Document doc = pane.getDocument();
       doc.insertString(doc.getLength(), str, null);
     } catch (BadLocationException e) {
-      // e.printStackTrace();
+      e.printStackTrace();
     }
+  }
+
+  /** enable auto scrolling */
+  private void autoScroll(JTextPane pane) {
+    DefaultCaret caret = (DefaultCaret) pane.getCaret();
+    caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
   }
 
 }

@@ -33,7 +33,7 @@ public class Serializer {
       out.writeObject(obj);
       out.close();
     } catch (IOException e) {
-      e.printStackTrace();
+//      e.printStackTrace();
     }
   }
 

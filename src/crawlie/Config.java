@@ -42,6 +42,9 @@ public class Config {
     maxFileWorkers = Integer.parseInt(prop.getProperty("max_file_workers"));
     cacheInterval = Integer.parseInt(prop.getProperty("cache_interval"));
     seed = prop.getProperty("seed");
+
+    predefinedAvoidance = prop.getProperty("avoid");
+    predefinedPriority = prop.getProperty("prioritize");
   }
 
   public synchronized static Config getInstance() {
@@ -79,10 +82,16 @@ public class Config {
   private boolean paused = true;
   private boolean guiLock = false;
 
+  private String predefinedAvoidance;
+  private String predefinedPriority;
+
   private String serializedFileName = "serialized.obj";
 
 
 
+  /**
+   * Load the config from the properties file
+   */
   private Properties loadConfig(String path) {
     prop = new Properties();
     try {
@@ -194,6 +203,14 @@ public class Config {
 
   public boolean isGuiLocked() {
     return guiLock;
+  }
+
+  public String getPredefinedAvoidance() {
+    return predefinedAvoidance;
+  }
+
+  public String getPredefinedPriority() {
+    return predefinedPriority;
   }
 
 }
