@@ -68,8 +68,7 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
   }
 
   public synchronized void add(AbstractPage newPage) {
-    if (Config.getInstance().singleDomain()
-        && !Config.getInstance().getSeed().contains(newPage.domain)) {
+    if (Config.getInstance().singleDomain() && !Config.getInstance().getSeed().contains(newPage.domain)) {
       return;
     }
 

@@ -22,8 +22,7 @@ public abstract class AbstractPage implements Serializable {
   protected final AnalyzedList analyzedPages;
   protected final DiscoveredQueue discoveredQueue;
 
-  public AbstractPage(String url, AbstractPage parent, AnalyzedList analyzedPages,
-      DiscoveredQueue discoveredQueue) {
+  public AbstractPage(String url, AbstractPage parent, AnalyzedList analyzedPages, DiscoveredQueue discoveredQueue) {
     this.parent = parent;
     this.url = url;
     this.analyzedPages = analyzedPages;

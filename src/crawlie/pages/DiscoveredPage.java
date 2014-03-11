@@ -11,8 +11,7 @@ import crawlie.Priority;
 public class DiscoveredPage extends AbstractPage implements Comparable<DiscoveredPage> {
   private static final long serialVersionUID = 2029011951639900955L;
 
-  public DiscoveredPage(String url, AbstractPage parent, AnalyzedList analyzedPages,
-      DiscoveredQueue discoveredQueue) {
+  public DiscoveredPage(String url, AbstractPage parent, AnalyzedList analyzedPages, DiscoveredQueue discoveredQueue) {
     super(url, parent, analyzedPages, discoveredQueue);
     super.priority = Priority.getInstance().urlHeuristic(this);
   }

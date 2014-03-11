@@ -10,8 +10,7 @@ import crawlie.crawler.FileDownloadController;
  * 
  */
 public class PageFactory {
-  public static AbstractPage createPage(String url, AbstractPage parent,
-      AnalyzedList analyzedPages, DiscoveredQueue discoveredQueue) {
+  public static AbstractPage createPage(String url, AbstractPage parent, AnalyzedList analyzedPages, DiscoveredQueue discoveredQueue) {
     if (!Config.getInstance().cacheAncestors())
       parent = null;
     if (FileDownloadController.getInstance().matchesFiletypeToDownload(url))
@@ -24,7 +23,6 @@ public class PageFactory {
    * popped off the priority queue to be analyzed and expanded
    */
   public static AbstractPage convertPage(AbstractPage page) {
-    return new AnalyzedPage(page.url, page.parent, page.analyzedPages, page.discoveredQueue,
-        page.priority);
+    return new AnalyzedPage(page.url, page.parent, page.analyzedPages, page.discoveredQueue, page.priority);
   }
 }

@@ -30,8 +30,7 @@ public class DatabaseController {
   public void addPage(AnalyzedPage page) {
 
     try {
-      conn.execute(String.format("insert into crawlie values (%s,%s,%s,%s,%s)", page.title,
-          page.url, page.domain, page.source, page.getPriority()));
+      conn.execute(String.format("insert into crawlie values (%s,%s,%s,%s,%s)", page.title, page.url, page.domain, page.source, page.getPriority()));
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -44,8 +43,7 @@ public class DatabaseController {
    * @param pages
    */
   public void addPages(AnalyzedList pages) {
-    String insertQuery =
-        "insert into crawlie (title,url,domain,source, priority) values (?,?,?,?,?)";
+    String insertQuery = "insert into crawlie (title,url,domain,source, priority) values (?,?,?,?,?)";
     PreparedStatement ps;
     try {
       ps = conn.makeBatchUpdate(insertQuery);

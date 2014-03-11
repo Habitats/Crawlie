@@ -92,7 +92,7 @@ public class CrawlieGuiController implements ActionListener, Observer {
           crawlie = new CrawlerController();
         }
         Config.getInstance().setPaused(false);
-        
+
         crawlie.initialize();
       } else if (sourceName.equals(CrawlieView.RESET)) {
         Logger.getInstance().status("Resetting the crawler to its initial configuration...");

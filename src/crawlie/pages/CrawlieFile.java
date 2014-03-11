@@ -10,8 +10,7 @@ import crawlie.crawler.FileDownloadController;
  */
 public class CrawlieFile extends AbstractPage {
 
-  public CrawlieFile(String url, AbstractPage parent, AnalyzedList analyzedPages,
-      DiscoveredQueue discoveredQueue) {
+  public CrawlieFile(String url, AbstractPage parent, AnalyzedList analyzedPages, DiscoveredQueue discoveredQueue) {
     super(url, parent, analyzedPages, discoveredQueue);
   }
 

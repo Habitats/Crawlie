@@ -29,8 +29,7 @@ public class Serializer {
 
   public void serializeCurrentData(Object obj) {
     try {
-      ObjectOutputStream out =
-          new ObjectOutputStream(new FileOutputStream(Config.getInstance().getSerializedFile()));
+      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(Config.getInstance().getSerializedFile()));
       out.writeObject(obj);
       out.close();
     } catch (IOException e) {
