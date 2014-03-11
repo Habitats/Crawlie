@@ -17,7 +17,7 @@ public class CrawlieFile extends AbstractPage {
 
   @Override
   public void analyze() {
-    FileDownloadController.getInstance().storeFile(super.url);
+    FileDownloadController.getInstance().addFileToDownloadQueue(super.url);
   }
 
   @Override

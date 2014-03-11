@@ -9,7 +9,18 @@ import crawlie.database.DatabaseController;
 import crawlie.pages.AnalyzedList;
 import crawlie.pages.DiscoveredPage;
 import crawlie.pages.DiscoveredQueue;
+import crawlie.pages.PageFactory;
 
+/**
+ * The actual meat of the crawler
+ * 
+ * The controller will control a set of crawler workers that will crawl the web in parallell while
+ * adding and analyzing pages up against two common/shared datasets, one for the pages (urls)
+ * discovered, and one for the ones analyzed
+ * 
+ * @author Patrick
+ * 
+ */
 public class CrawlerController {
   private AnalyzedList analyzedPages;
   private DiscoveredQueue discoveredPages;
@@ -67,18 +78,18 @@ public class CrawlerController {
     }
   }
 
-  /** Initialize the web crawler! It will start off where it left off if in paused state */
-  public void init() {
+  /** Initialize the web crawler! */
+  public void initialize() {
+    // keep track of when the crawler started in order to calculate total execution time
     start = System.currentTimeMillis();
 
-    FileDownloadController.getInstance().initFileManager();
-    startWorkers();
+    startFileDownloadWorkers();
+    startCrawlerWorkers();
 
     // add the seed page to the discovered list if it isn't already discovered. if it is discovered
     // it means that it is using a cached dataset, thus the seed should not be visited again
     if (!discoveredPages.visited(Config.getInstance().getSeed())) {
-      DiscoveredPage seedPage =
-          new DiscoveredPage(Config.getInstance().getSeed(), null, analyzedPages, discoveredPages);
+      DiscoveredPage seedPage = (DiscoveredPage) PageFactory.createPage(Config.getInstance().getSeed(), null, analyzedPages, discoveredPages);
       discoveredPages.add(seedPage);
     }
   }
@@ -87,13 +98,21 @@ public class CrawlerController {
    * Start the crawler workers. these workers will pop the discovered page (URL) with the highest
    * priority and add its children to the discovered queue
    */
-  private void startWorkers() {
+  private void startCrawlerWorkers() {
     for (int i = 0; i < Config.getInstance().getMaxWorkers(); i++) {
       CrawlerWorker crawler = new CrawlerWorker(this);
       Thread crawlerThread = new Thread(crawler);
       crawlerThread.setName("CrawlerThread " + i);
       crawlerThread.start();
     }
+  }
+
+  /**
+   * start the file download workers. these will wait for files to be added to a download queue,
+   * then start processing them in parallell
+   */
+  private void startFileDownloadWorkers() {
+    FileDownloadController.getInstance().initFileManager();
   }
 
   public AnalyzedList getAnalyzedPages() {
@@ -115,12 +134,11 @@ public class CrawlerController {
       cacheCurrentData();
     } else if (analyzedPages.size() < Config.getInstance().getMaxPages()) {
       analyzedPages.dumpPages();
-      startWorkers();
+      startCrawlerWorkers();
     }
     Logger.getInstance().status("Unique pages discovered: " + discoveredPages.getVisitedSize());
     Logger.getInstance().status("Unique pages analyzed: " + analyzedPages.size());
-    Logger.getInstance().status(
-        "Execution time: " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+    Logger.getInstance().status("Execution time: " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
 
     // unlock the GUI. yes i know, this is dirty, but it works
     Config.getInstance().setGuiLock(false);

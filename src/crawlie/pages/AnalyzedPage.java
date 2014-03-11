@@ -29,13 +29,13 @@ public class AnalyzedPage extends AbstractPage {
 
   private ArrayList<AbstractPage> children;
 
-  public AnalyzedPage(String url, AbstractPage parent, AnalyzedList analyzedPage,
-      DiscoveredQueue discoveredPages, int priority) {
+  public AnalyzedPage(String url, AbstractPage parent, AnalyzedList analyzedPage, DiscoveredQueue discoveredPages, int priority) {
     super(url, parent, analyzedPage, discoveredPages);
     super.priority = priority;
     String title = "No title";
     Document source = null;
 
+    // the JSoup library is used to downloading
     try {
       source = Jsoup.connect(url).get();
       title = source.select("title").text();
@@ -52,31 +52,40 @@ public class AnalyzedPage extends AbstractPage {
   public ArrayList<AbstractPage> genChildren() {
     if (children == null) {
       children = new ArrayList<AbstractPage>();
+
+      // select all anchor/link elements from the source/DOM
       Elements links = source.select("a[href]");
       for (Element child : links) {
-        // remove unecessary stuff from URL
+        // fetch the url value from the href attribute
         String url = child.attr("abs:href");
 
-        // sometimes people put empty urls out onm the web. people are not always very smart
+        // sometimes people put empty urls out onm the web... amazing.
         if (url.length() > 0) {
-          addChildren(child, url);
+          addChildren(url);
         }
       }
+
+      // if include_images is set, well, include the image tags as well! sometimes ordinary urls are
+      // stored here for reason i do not know
       if (Config.getInstance().includeImages()) {
+        // select all image elements
         Elements images = source.select("img[src]");
         for (Element img : images) {
+          // fetch the url value from the src attribute
           String url = img.attr("abs:src");
-          // url = url.split("\\?|=|#")[0];
-          addChildren(img, url);
+          addChildren(url);
         }
       }
     }
     return children;
   }
 
-  private void addChildren(Element e, String url) {
-    // if (e.val().startsWith("/"))
-    // url = prefix + "//" + domain + url;
+  /**
+   * Add the element/url to its parents list. as of now only the url is added.
+   * 
+   * From this URL, create a new page instance, and link it to its parent, creating a tree-structure
+   */
+  private void addChildren(String url) {
     if (!discoveredQueue.visited(url)) {
       AbstractPage newPage = PageFactory.createPage(url, this, analyzedPages, discoveredQueue);
       children.add(newPage);
@@ -87,11 +96,13 @@ public class AnalyzedPage extends AbstractPage {
   public void analyze() {
     if (source == null)
       return;
-    // if (crawlie.getAnalyzedPages().size() >= Config.getInstance().getMaxPages()) {
-    // return;
-    // }
+    // add this page to the set of analyzed pages
     analyzedPages.add(this);
+
+    // scan all the urls in this document and add them as children
     for (AbstractPage child : genChildren()) {
+      // the children will be an instance of DiscoveredPage, that will get added to the
+      // discoveredQueue
       child.analyze();
     }
     // remove the source when analyzing is done to free up memory
@@ -100,7 +111,6 @@ public class AnalyzedPage extends AbstractPage {
 
   @Override
   public String toString() {
-    // TODO Auto-generated method stub
     return "Analyzed > " + super.toString();
   }
 }

@@ -16,8 +16,9 @@ public class Crawlie {
       new CrawlieGuiController();
     } else {
       // start a single instance with no GUI
-      // everything about the actual parser is contained here
-      new CrawlerController().init();
+      // everything about the actual parser is contained here but its recommended to use the GUI
+      // version to access the full set of features and an overall better experience
+      new CrawlerController().initialize();
     }
     Config.getInstance().announceConfig();
   }

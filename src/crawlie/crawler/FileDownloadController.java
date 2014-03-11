@@ -1,6 +1,8 @@
 package crawlie.crawler;
 
 import java.util.ArrayList;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import crawlie.Config;
 
@@ -9,6 +11,9 @@ import crawlie.Config;
  * Singleton for general purpose file utility methods
  * 
  * It holds a set of file workers that will take an url and store them on the disk accordingly
+ * 
+ * It is created as a singleton because it will make no sense to have multiple download controllers
+ * running
  * 
  * @author Patrick
  * 
@@ -22,47 +27,46 @@ public class FileDownloadController {
     return instance;
   }
 
-  // ########### SINGLETON #######################################
-
-  private ArrayList<String> filesToStore;
-
   private FileDownloadController() {}
 
+  // ########### SINGLETON #######################################
+
+  // workers will pop urls off this queue and download them to disk
+  private Queue<String> fileDownloadQueue;
+
+
   public void initFileManager() {
-    filesToStore = new ArrayList<String>();
+    fileDownloadQueue = new ConcurrentLinkedQueue<String>();
     for (int i = 0; i < Config.getInstance().getMaxFileWorkers(); i++) {
-      Thread fw =
-          new Thread(new FileDownloadWorker(this, Config.getInstance().getDownloadLocation() + "/"));
+      Thread fw = new Thread(new FileDownloadWorker(this, Config.getInstance().getDownloadLocation() + "/"));
       fw.setName("FileWorker " + i);
       fw.start();
     }
   }
 
-  private synchronized void addFileToStore(String file) {
-    filesToStore.add(file);
+  /** add a file to the cache and notify one waiting worker */
+  public synchronized void addFileToDownloadQueue(String file) {
+    fileDownloadQueue.add(file);
     notify();
   }
 
-  public synchronized String getFileToStore() {
-    while (filesToStore.isEmpty())
+  /**
+   * returns the first item added to the queue. if empty, wait for the queue to fill up
+   */
+  public synchronized String getUrlFromDownloadQueue() {
+    while (fileDownloadQueue.isEmpty())
       try {
         wait();
       } catch (InterruptedException e) {
       }
-    return filesToStore.remove(0);
+    return fileDownloadQueue.poll();
   }
 
-  public void storeFile(String url) {
-    storeFile(url, Config.getInstance().getDownloadLocation() + "/");
-  }
-
-  public void storeFile(final String url, final String folder) {
-    addFileToStore(url);
-  }
-
-  public boolean isFile(String url) {
-    return url.substring(url.lastIndexOf(".") + 1).matches(
-        Config.getInstance().getDownloadFiletype());
+  /**
+   * does the proposed url match a filetype marked for download?
+   */
+  public boolean matchesFiletypeToDownload(String url) {
+    return url.substring(url.lastIndexOf(".") + 1).matches(Config.getInstance().getDownloadFiletype());
   }
 
   public boolean running() {

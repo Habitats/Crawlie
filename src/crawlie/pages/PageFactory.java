@@ -14,7 +14,7 @@ public class PageFactory {
       AnalyzedList analyzedPages, DiscoveredQueue discoveredQueue) {
     if (!Config.getInstance().cacheAncestors())
       parent = null;
-    if (FileDownloadController.getInstance().isFile(url))
+    if (FileDownloadController.getInstance().matchesFiletypeToDownload(url))
       return new CrawlieFile(url, parent, analyzedPages, discoveredQueue);
     return new DiscoveredPage(url, parent, analyzedPages, discoveredQueue);
   }
