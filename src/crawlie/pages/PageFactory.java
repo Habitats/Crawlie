@@ -1,7 +1,7 @@
 package crawlie.pages;
 
 import crawlie.Config;
-import crawlie.FileManager;
+import crawlie.crawler.FileDownloadController;
 
 /**
  * Page factory class. Pages should only be created here!
@@ -10,16 +10,16 @@ import crawlie.FileManager;
  * 
  */
 public class PageFactory {
-  public static Page createPage(String url, Page parent, AnalyzedPages analyzedPages,
-      DiscoveredQueue discoveredQueue) {
+  public static AbstractPage createPage(String url, AbstractPage parent,
+      AnalyzedList analyzedPages, DiscoveredQueue discoveredQueue) {
     if (!Config.getInstance().cacheAncestors())
       parent = null;
-    if (FileManager.getInstance().isFile(url))
+    if (FileDownloadController.getInstance().isFile(url))
       return new CrawlieFile(url, parent, analyzedPages, discoveredQueue);
     return new DiscoveredPage(url, parent, analyzedPages, discoveredQueue);
   }
 
-  public static Page convertPage(Page page) {
+  public static AbstractPage convertPage(AbstractPage page) {
     return new AnalyzedPage(page.url, page.parent, page.analyzedPages, page.discoveredQueue,
         page.priority);
   }

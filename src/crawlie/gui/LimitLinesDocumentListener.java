@@ -4,7 +4,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-/*
+/**
+ * HELPER CLASS FOR DOCUMENTS
+ * 
  * A class to control the maximum number of lines to be stored in a Document
  * 
  * Excess lines can be removed from the start or end of the Document depending on your requirement.
@@ -12,6 +14,10 @@ import javax.swing.text.*;
  * a) if you append text to the Document, then you would want to remove lines from the start. b) if
  * you insert text at the beginning of the Document, then you would want to remove lines from the
  * end.
+ * 
+ * @author Rob Camick on October 15, 2008,
+ *         http://tips4java.wordpress.com/2008/10/15/limit-lines-in-document/
+ * 
  */
 public class LimitLinesDocumentListener implements DocumentListener {
   private int maximumLines;
@@ -55,19 +61,23 @@ public class LimitLinesDocumentListener implements DocumentListener {
 
   // Handle insertion of new text into the Document
 
+  @Override
   public void insertUpdate(final DocumentEvent e) {
     // Changes to the Document can not be done within the listener
     // so we need to add the processing to the end of the EDT
 
     SwingUtilities.invokeLater(new Runnable() {
+      @Override
       public void run() {
         removeLines(e);
       }
     });
   }
 
+  @Override
   public void removeUpdate(DocumentEvent e) {}
 
+  @Override
   public void changedUpdate(DocumentEvent e) {}
 
   /*

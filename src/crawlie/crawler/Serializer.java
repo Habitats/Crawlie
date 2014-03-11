@@ -1,4 +1,4 @@
-package crawlie;
+package crawlie.crawler;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -6,6 +6,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import crawlie.Config;
+
+/**
+ * Serializer class giving the crawler the option to cache its current data to disk, in order to
+ * resume its business when restarted
+ * 
+ * @author Patrick
+ * 
+ */
 public class Serializer {
 
   private static Serializer instance;

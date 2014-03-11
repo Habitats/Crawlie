@@ -1,6 +1,8 @@
-package crawlie;
+package crawlie.crawler;
 
 import java.util.ArrayList;
+
+import crawlie.Config;
 
 
 /**
@@ -11,12 +13,12 @@ import java.util.ArrayList;
  * @author Patrick
  * 
  */
-public class FileManager {
-  private static FileManager instance;
+public class FileDownloadController {
+  private static FileDownloadController instance;
 
-  public synchronized static FileManager getInstance() {
+  public synchronized static FileDownloadController getInstance() {
     if (instance == null)
-      instance = new FileManager();
+      instance = new FileDownloadController();
     return instance;
   }
 
@@ -24,13 +26,13 @@ public class FileManager {
 
   private ArrayList<String> filesToStore;
 
-  private FileManager() {}
+  private FileDownloadController() {}
 
   public void initFileManager() {
     filesToStore = new ArrayList<String>();
     for (int i = 0; i < Config.getInstance().getMaxFileWorkers(); i++) {
       Thread fw =
-          new Thread(new FileWorker(this, Config.getInstance().getDownloadLocation() + "/"));
+          new Thread(new FileDownloadWorker(this, Config.getInstance().getDownloadLocation() + "/"));
       fw.setName("FileWorker " + i);
       fw.start();
     }

@@ -1,9 +1,14 @@
 package crawlie.gui;
 
-import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+/**
+ * The GUI frame, ie. main window.
+ * 
+ * @author Patrick
+ * 
+ */
 public class CrawlieFrame extends JFrame {
   private static final long serialVersionUID = 3215696573774506119L;
 
@@ -16,13 +21,12 @@ public class CrawlieFrame extends JFrame {
 
   private void buildFrame(JFrame frame) {
 
-    frame.getContentPane().setBackground(Color.black);
-
+    // fit the frame to its contents
     frame.pack();
 
+    // position in center
     frame.setLocationRelativeTo(frame.getRootPane());
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
     frame.setVisible(true);
   }
 }

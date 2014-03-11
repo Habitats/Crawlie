@@ -5,6 +5,8 @@ import java.util.Observable;
 /**
  * Logger class. Sysouts mid code is bad!
  * 
+ * Used to delegate messages to the GUI etc
+ * 
  * @author Patrick
  * 
  */
@@ -22,19 +24,19 @@ public class Logger extends Observable {
 
 
   public void log(String log) {
-    System.out.println(String.format("%4d: %s", logNumber++, log));
+    // System.out.println(String.format("%4d: %s", logNumber++, log));
     setChanged();
     notifyObservers(new Message(log, Message.Type.LOG));
   }
 
   public void error(String log) {
-    System.err.println(String.format("%8d: %s", errorNumber++, log));
+    // System.err.println(String.format("%8d: %s", errorNumber++, log));
     setChanged();
     notifyObservers(new Message(log, Message.Type.ERROR));
   }
 
   public void status(String log) {
-    System.err.println(String.format("%8d: %s", statusNumber++, log));
+    System.out.println(String.format("%8d: %s", statusNumber++, log));
     setChanged();
     notifyObservers(new Message(log, Message.Type.STATUS));
   }

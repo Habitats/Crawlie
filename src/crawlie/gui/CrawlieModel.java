@@ -1,12 +1,17 @@
 package crawlie.gui;
 
 import java.util.List;
-import java.util.Observable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import crawlie.Message;
 
 
+/**
+ * Model for the GUI
+ * 
+ * @author Patrick
+ * 
+ */
 public class CrawlieModel implements CrawlieListener {
 
   private final List<CrawlieListener> listeners = new CopyOnWriteArrayList<CrawlieListener>();
@@ -19,6 +24,7 @@ public class CrawlieModel implements CrawlieListener {
     listeners.remove(listener);
   }
 
+  @Override
   public void addErrorMessage(Message message) {
     for (CrawlieListener listener : listeners) {
       listener.addErrorMessage(message);

@@ -23,9 +23,18 @@ import crawlie.Config;
 public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
   private static final long serialVersionUID = -8067373472278549730L;
 
+  // keeps track of which urls that have been visited this crawler session
   private HashMap<String, Boolean> visited;
+
+  // keeps track of which page to analyze next according to a heuristic value specified in
+  // Priority.java
   private transient MinMaxPriorityQueue<DiscoveredPage> pages;
+
+  // max entries that are allowed in the MinMaxPriorityQueue. when full, the queue will
+  // automatically disregard elements with the lowest priority in linear time
   private final int MAX_SIZE = 10000;
+
+  // helper structure due to MinMaxPriorityQueue not being serializable
   private List<DiscoveredPage> tempPages;
 
   public DiscoveredQueue() {
@@ -33,15 +42,21 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
     pages = MinMaxPriorityQueue.maximumSize(MAX_SIZE).create();
   }
 
+  /**
+   * checks if the given url has been visited before, during this crawler session. there's no point
+   * in going the same place twice
+   */
   public synchronized boolean visited(String url) {
     return visited.get(url) != null;
   }
 
-  public synchronized Page pop() {
-    Page page;
+  /** pop the page with the highest priority from the queue */
+  public synchronized AbstractPage pop() {
+    AbstractPage page;
 
     while (pages.size() == 0)
       try {
+        // quque empty, wait for it to fill up
         wait();
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -50,19 +65,19 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
     return page;
   }
 
-  public synchronized void add(Page newPage) {
+  public synchronized void add(AbstractPage newPage) {
     if (Config.getInstance().singleDomain()
         && !Config.getInstance().getSeed().contains(newPage.domain)) {
       return;
     }
 
     pages.add((DiscoveredPage) newPage);
-    // if (pages.size() >= MAX_SIZE)
-    // pages.removeLast();
+
+    // notify waiting workers that the queue is no longer empty
     notifyAll();
   }
 
-  public synchronized void addVisited(Page page) {
+  public synchronized void addVisited(AbstractPage page) {
     visited.put(page.url, true);
   }
 
@@ -71,13 +86,18 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
   }
 
   /**
-   * Due to MinMaxPriorityQueue not being serializable this workaround is used
+   * Workaround method due to MinMaxPriorityQueue not being serializable. Store everything
+   * temporarily in a "normal" list
    */
   public void onSerialize() {
     tempPages = new ArrayList<DiscoveredPage>();
     tempPages.addAll(pages);
   }
 
+  /**
+   * Workaround method due to MinMaxPriorityQueue not being serializable. Put everything back in the
+   * MinMaxPriorityQueue
+   */
   public void onDeserialize() {
     pages = MinMaxPriorityQueue.maximumSize(MAX_SIZE).create();
     pages.addAll(tempPages);

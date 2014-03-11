@@ -3,6 +3,7 @@ package crawlie;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Properties;
 
 /**
@@ -32,14 +33,13 @@ public class Config {
     includeImages = Boolean.parseBoolean(prop.getProperty("include_images"));
     storeContent = Boolean.parseBoolean(prop.getProperty("store_content"));
     cahceAncestors = Boolean.parseBoolean(prop.getProperty("cache_ancestors"));
+    guiEnabled = Boolean.parseBoolean(prop.getProperty("enable_gui"));
 
     maxPages = Integer.parseInt(prop.getProperty("max_pages"));
     maxWorkers = Integer.parseInt(prop.getProperty("max_workers"));
     maxFileWorkers = Integer.parseInt(prop.getProperty("max_file_workers"));
     cacheInterval = Integer.parseInt(prop.getProperty("cache_interval"));
     seed = prop.getProperty("seed");
-
-
   }
 
   public synchronized static Config getInstance() {
@@ -72,6 +72,7 @@ public class Config {
   private boolean includeImages;
   private boolean storeContent;
   private boolean cahceAncestors;
+  private boolean guiEnabled;
 
   private boolean paused = false;
   private String serializedFileName = "serialized.obj";
@@ -82,15 +83,21 @@ public class Config {
     prop = new Properties();
     try {
       prop.load(new FileInputStream(new File(path)));
-      Logger.getInstance().status("Loading config:\n " + prop.toString());
     } catch (IOException e) {
       e.printStackTrace();
     }
     return prop;
   }
 
-  public Properties getProperties() {
-    return prop;
+  /** Post the current config to the log in a readable format */
+  public void announceConfig() {
+    Enumeration e = prop.propertyNames();
+    Logger.getInstance().status("LOADING CONFIG...");
+    while (e.hasMoreElements()) {
+      String key = (String) e.nextElement();
+      Logger.getInstance().status(key + ": " + prop.getProperty(key));
+    }
+    Logger.getInstance().status("LOADING CONFIG DONE - EDIT CRAWLIE.PROPERTIES TO CUSTOMIZE!");
   }
 
   public String getJdbcDriver() {
@@ -171,5 +178,9 @@ public class Config {
 
   public int getMaxFileWorkers() {
     return maxFileWorkers;
+  }
+
+  public boolean guiEnabled() {
+    return guiEnabled;
   }
 }

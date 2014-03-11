@@ -10,7 +10,7 @@ import org.jsoup.select.Elements;
 
 import crawlie.Config;
 import crawlie.Logger;
-import crawlie.pages.Page;
+import crawlie.pages.AbstractPage;
 
 /**
  * Pages that are analyzed are stored as an instance of this class and cached until they are written
@@ -19,16 +19,17 @@ import crawlie.pages.Page;
  * @author Patrick
  * 
  */
-public class AnalyzedPage extends Page {
+public class AnalyzedPage extends AbstractPage {
   private static final long serialVersionUID = -4212043927105278607L;
 
+  // Document isn't serializable
   public transient Document source;
+
   public final String title;
 
-  private ArrayList<Page> children;
-  private String sourceAsText;
+  private ArrayList<AbstractPage> children;
 
-  public AnalyzedPage(String url, Page parent, AnalyzedPages analyzedPage,
+  public AnalyzedPage(String url, AbstractPage parent, AnalyzedList analyzedPage,
       DiscoveredQueue discoveredPages, int priority) {
     super(url, parent, analyzedPage, discoveredPages);
     super.priority = priority;
@@ -48,9 +49,9 @@ public class AnalyzedPage extends Page {
     this.title = title;
   }
 
-  public ArrayList<Page> genChildren() {
+  public ArrayList<AbstractPage> genChildren() {
     if (children == null) {
-      children = new ArrayList<Page>();
+      children = new ArrayList<AbstractPage>();
       Elements links = source.select("a[href]");
       for (Element child : links) {
         // remove unecessary stuff from URL
@@ -74,7 +75,7 @@ public class AnalyzedPage extends Page {
     // if (e.val().startsWith("/"))
     // url = prefix + "//" + domain + url;
     if (!discoveredQueue.visited(url)) {
-      Page newPage = PageFactory.createPage(url, this, analyzedPages, discoveredQueue);
+      AbstractPage newPage = PageFactory.createPage(url, this, analyzedPages, discoveredQueue);
       discoveredQueue.addVisited(newPage);
       children.add(newPage);
     }
@@ -88,7 +89,7 @@ public class AnalyzedPage extends Page {
     // return;
     // }
     analyzedPages.add(this);
-    for (Page child : genChildren()) {
+    for (AbstractPage child : genChildren()) {
       child.analyze();
     }
     // remove the source when analyzing is done to free up memory

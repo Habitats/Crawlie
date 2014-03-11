@@ -13,13 +13,13 @@ import crawlie.Config;
  * @author Patrick
  * 
  */
-public class AnalyzedPages implements Iterable<AnalyzedPage>, Serializable {
+public class AnalyzedList implements Iterable<AnalyzedPage>, Serializable {
   private static final long serialVersionUID = 6891988595063879461L;
 
   private ArrayList<AnalyzedPage> pages;
   private int size;
 
-  public AnalyzedPages() {
+  public AnalyzedList() {
     pages = new ArrayList<AnalyzedPage>();
   }
 

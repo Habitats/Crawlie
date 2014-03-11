@@ -1,4 +1,4 @@
-package crawlie;
+package crawlie.crawler;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+
+import crawlie.Logger;
 
 
 /**
@@ -18,11 +20,11 @@ import java.net.URL;
  * @author Patrick
  * 
  */
-public class FileWorker implements Runnable {
+public class FileDownloadWorker implements Runnable {
   private String folder;
-  private FileManager fileManager;
+  private FileDownloadController fileManager;
 
-  public FileWorker(FileManager fileManager, String folder) {
+  public FileDownloadWorker(FileDownloadController fileManager, String folder) {
     this.fileManager = fileManager;
     this.folder = folder;
   }

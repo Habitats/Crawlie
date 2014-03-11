@@ -1,22 +1,23 @@
 package crawlie.gui;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
-
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
+/**
+ * A continuous feed area, suitable for a continuous log. It will remove lines from the top when the
+ * maximum is reached.
+ * 
+ * @author Patrick
+ * 
+ */
 public class ContinuousFeedArea extends JTextPane {
-  private Queue<String> feed;
-  private int maxLength = 1000;
+  private static final long serialVersionUID = -3892971130305387962L;
+
+  private int maxLength = 200;
 
   public ContinuousFeedArea() {
-    feed = new ConcurrentLinkedDeque<String>();
-    getDocument().addDocumentListener(new LimitLinesDocumentListener(200));
+    getDocument().addDocumentListener(new LimitLinesDocumentListener(maxLength));
   }
 
   public synchronized void append(String str) {

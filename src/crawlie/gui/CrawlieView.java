@@ -2,18 +2,20 @@ package crawlie.gui;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
-import java.util.Observable;
-import java.util.Observer;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.text.DefaultCaret;
 
 import crawlie.Message;
 
+/**
+ * The actual configuration of the GUI is in this class. It implements a listener interface in order
+ * to get information
+ * 
+ * @author Patrick
+ * 
+ */
 public class CrawlieView extends JPanel implements CrawlieListener {
   private static final long serialVersionUID = -8336882687395127678L;
 
@@ -22,7 +24,6 @@ public class CrawlieView extends JPanel implements CrawlieListener {
   public static final String RESET = "RESET";
   public static final String INITIALIZE_CACHE = "INITIALIZE CACHE";
 
-  private CrawlieModel model;
   private JButton pause;
   private JButton start;
   private JButton reset;
@@ -53,7 +54,7 @@ public class CrawlieView extends JPanel implements CrawlieListener {
     setMinimumSize(dim);
     setMaximumSize(dim);
 
-    add(new JScrollPane(statusArea), new GBC(0, 3).setSpan(4, 2).setWeight(0.9, 0.1));
+    add(new JScrollPane(statusArea), new GBC(0, 3).setSpan(4, 2).setWeight(0.9, 0.3));
     add(new JScrollPane(errorArea), new GBC(2, 1).setSpan(2, 2).setWeight(.9, 0.8));
     add(new JScrollPane(logArea), new GBC(0, 1).setSpan(2, 2).setWeight(0.8, 0.8));
 
@@ -72,7 +73,7 @@ public class CrawlieView extends JPanel implements CrawlieListener {
     return textArea;
   }
 
-  public void addController(CrawlieController controller) {
+  public void addController(CrawlieGuiController controller) {
     start.addActionListener(controller);
     pause.addActionListener(controller);
     reset.addActionListener(controller);

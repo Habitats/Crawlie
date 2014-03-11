@@ -1,5 +1,13 @@
 package crawlie;
 
+import java.text.SimpleDateFormat;
+
+/**
+ * Data class for messages. Rather self explanatory
+ * 
+ * @author Patrick
+ * 
+ */
 public class Message {
   public enum Type {
     STATUS, LOG, ERROR;
@@ -17,6 +25,6 @@ public class Message {
 
   @Override
   public String toString() {
-    return type.name() + ": " + message;
+    return new SimpleDateFormat("HH:mm:ss").format(time) + " > " + type.name() + " > " + message;
   }
 }

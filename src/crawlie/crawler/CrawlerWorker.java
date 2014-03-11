@@ -1,6 +1,8 @@
-package crawlie;
+package crawlie.crawler;
 
-import crawlie.pages.Page;
+import crawlie.Config;
+import crawlie.Logger;
+import crawlie.pages.AbstractPage;
 import crawlie.pages.PageFactory;
 
 /**
@@ -9,11 +11,11 @@ import crawlie.pages.PageFactory;
  * @author Patrick
  * 
  */
-public class Crawler implements Runnable {
+public class CrawlerWorker implements Runnable {
 
-  private Crawlie crawlie;
+  private CrawlerController crawlie;
 
-  public Crawler(Crawlie crawlie) {
+  public CrawlerWorker(CrawlerController crawlie) {
     this.crawlie = crawlie;
   }
 
@@ -26,12 +28,12 @@ public class Crawler implements Runnable {
 
       // try to fetch a new page from the discovered priority queue, if empty, thread will wait
       // until something is pushed in the queue
-      Page page = PageFactory.convertPage(crawlie.getDiscoveredPages().pop());
+      AbstractPage page = PageFactory.convertPage(crawlie.getDiscoveredPages().pop());
       if (crawlie.getAnalyzedPages().size() >= Config.getInstance().getMaxPages()) {
         return;
       }
 
-      Logger.getInstance().log("Analysing: " + page.toString());
+      Logger.getInstance().log(page.toString());
       page.analyze();
     }
     // Logger.log("Worker done!");

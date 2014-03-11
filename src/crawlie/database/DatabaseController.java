@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import crawlie.pages.AnalyzedPage;
-import crawlie.pages.AnalyzedPages;
+import crawlie.pages.AnalyzedList;
 
 /**
  * Database queries happens here, nowhere else!
@@ -43,7 +43,7 @@ public class DatabaseController {
    * 
    * @param pages
    */
-  public void addPages(AnalyzedPages pages) {
+  public void addPages(AnalyzedList pages) {
     String insertQuery =
         "insert into crawlie (title,url,domain,source, priority) values (?,?,?,?,?)";
     PreparedStatement ps;

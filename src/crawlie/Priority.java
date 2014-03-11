@@ -1,12 +1,14 @@
 package crawlie;
 
 import crawlie.pages.AnalyzedPage;
-import crawlie.pages.Page;
+import crawlie.pages.AbstractPage;
 
 /**
  * Heuristic class to handle the priority of content and URL's.
  * 
  * Should be rather easy to extend and manipulate without causing havoc
+ * 
+ * Could potentially be extended to include heuristics for the pages content in the future
  * 
  * @author Patrick
  * 
@@ -36,11 +38,11 @@ public class Priority {
    * 
    * @return heuristic value
    */
-  public int urlHeuristic(Page page) {
+  public int urlHeuristic(AbstractPage page) {
     int priority = 0;
 
-//    if (page.url.contains(".no/"))
-//      priority += 3;
+    // if (page.url.contains(".no/"))
+    // priority += 3;
     if (page.url.contains("telenor"))
       priority += 9;
     if (page.url.contains("sport"))

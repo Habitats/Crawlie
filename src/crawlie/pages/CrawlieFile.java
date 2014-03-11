@@ -1,23 +1,23 @@
 package crawlie.pages;
 
-import crawlie.FileManager;
+import crawlie.crawler.FileDownloadController;
 
 /**
- * Whenever a file is cached for download, it is stored as an instance of this class
+ * Whenever a non-html file is cached for download, it is stored as an instance of this class
  * 
  * @author Patrick
  * 
  */
-public class CrawlieFile extends Page {
+public class CrawlieFile extends AbstractPage {
 
-  public CrawlieFile(String url, Page parent, AnalyzedPages analyzedPages,
+  public CrawlieFile(String url, AbstractPage parent, AnalyzedList analyzedPages,
       DiscoveredQueue discoveredQueue) {
     super(url, parent, analyzedPages, discoveredQueue);
   }
 
   @Override
   public void analyze() {
-    FileManager.getInstance().storeFile(super.url);
+    FileDownloadController.getInstance().storeFile(super.url);
     discoveredQueue.addVisited(this);
   }
 

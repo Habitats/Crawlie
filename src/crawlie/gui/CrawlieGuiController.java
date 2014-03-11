@@ -10,9 +10,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import crawlie.Config;
-import crawlie.Crawlie;
 import crawlie.Logger;
 import crawlie.Message;
+import crawlie.crawler.CrawlerController;
 
 
 /**
@@ -21,13 +21,13 @@ import crawlie.Message;
  * @author Patrick
  * 
  */
-public class CrawlieController implements ActionListener, Observer {
+public class CrawlieGuiController implements ActionListener, Observer {
 
   private CrawlieModel model;
   private CrawlieListener view;
   private CrawlieFrame frame;
 
-  public CrawlieController() {
+  public CrawlieGuiController() {
     // set look and feel to the OS default over the standard java one (which frankly is quite ugly)
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -56,14 +56,14 @@ public class CrawlieController implements ActionListener, Observer {
   public void actionPerformed(ActionEvent e) {
     System.out.println(e.getActionCommand());
     String sourceName = ((JComponent) e.getSource()).getName();
-    Crawlie crawlie = new Crawlie();
+    CrawlerController crawlie = new CrawlerController();
     if (sourceName.equals(CrawlieView.START)) {
       Logger.getInstance().status("Starting Crawlie!");
       crawlie.init();
       Config.getInstance().setPaused(false);
     } else if (sourceName.equals(CrawlieView.RESET)) {
       Logger.getInstance().status("Resetting the crawler to its initial configuration...");
-      crawlie = new Crawlie();
+      crawlie = new CrawlerController();
       Config.getInstance().setPaused(false);
     } else if (sourceName.equals(CrawlieView.STOP)) {
       Logger
@@ -75,11 +75,6 @@ public class CrawlieController implements ActionListener, Observer {
       Logger.getInstance().status("Attempting to restore serialized data...");
       crawlie.initializeCachedData();
     }
-  }
-
-  /** Main method with GUI */
-  public static void main(String[] args) {
-    CrawlieController controller = new CrawlieController();
   }
 
   @Override

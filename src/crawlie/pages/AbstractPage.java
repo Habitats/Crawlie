@@ -2,23 +2,28 @@ package crawlie.pages;
 
 import java.io.Serializable;
 
-/*
- * When a discovered page is cached, it is stored as an instance of a subclass of this class
+/**
+ * When a discovered page (image, html etc) is cached, it is stored as an instance of a subclass of
+ * this class
+ * 
+ * @author Patrick
  */
-public abstract class Page implements Serializable {
+public abstract class AbstractPage implements Serializable {
   private static final long serialVersionUID = 4547183824431052054L;
 
+  // final, immuatable fields
   public final String url;
   public final String domain;
   public final String prefix;
   public final String suffix;
-  public final Page parent;
+  public final AbstractPage parent;
 
   protected int priority;
-  protected final AnalyzedPages analyzedPages;
+  protected final AnalyzedList analyzedPages;
   protected final DiscoveredQueue discoveredQueue;
 
-  public Page(String url, Page parent, AnalyzedPages analyzedPages, DiscoveredQueue discoveredQueue) {
+  public AbstractPage(String url, AbstractPage parent, AnalyzedList analyzedPages,
+      DiscoveredQueue discoveredQueue) {
     this.parent = parent;
     this.url = url;
     this.analyzedPages = analyzedPages;
@@ -48,9 +53,17 @@ public abstract class Page implements Serializable {
 
   @Override
   public String toString() {
-    return String.format("Priority: %4d - URL: %s", priority, url);
+    return String.format("Priority: %d - URL: %s", priority, url);
   }
 
 
+  /**
+   * what to do when popping a page instance off the priority queue.
+   * 
+   * if its an image -> download, html page -> expand its children, discovered new page -> add it to
+   * the priority queue, etc
+   * 
+   * see subclasses for explicit implementations
+   */
   public abstract void analyze();
 }
