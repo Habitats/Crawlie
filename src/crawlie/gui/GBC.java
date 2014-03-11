@@ -5,8 +5,9 @@ import java.awt.Insets;
 
 /**
  * Helper class for GridBagLayout
+ * 
  * @author Patrick
- *
+ * 
  */
 public class GBC extends GridBagConstraints {
 

@@ -22,7 +22,7 @@ import crawlie.pages.Page;
 public class AnalyzedPage extends Page {
   private static final long serialVersionUID = -4212043927105278607L;
 
-  public transient final Document source;
+  public transient Document source;
   public final String title;
 
   private ArrayList<Page> children;
@@ -43,8 +43,8 @@ public class AnalyzedPage extends Page {
     }
 
     this.source = source;
-    if (source != null)
-      this.sourceAsText = source.toString();
+    // if (source != null)
+    // this.sourceAsText = source.toString();
     this.title = title;
   }
 
@@ -91,5 +91,7 @@ public class AnalyzedPage extends Page {
     for (Page child : genChildren()) {
       child.analyze();
     }
+    // remove the source when analyzing is done to free up memory
+    source = null;
   }
 }
