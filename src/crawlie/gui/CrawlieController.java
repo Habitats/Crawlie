@@ -12,6 +12,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import crawlie.Config;
 import crawlie.Crawlie;
 import crawlie.Logger;
+import crawlie.Message;
 
 
 /**
@@ -23,7 +24,7 @@ import crawlie.Logger;
 public class CrawlieController implements ActionListener, Observer {
 
   private CrawlieModel model;
-  private CrawlieView view;
+  private CrawlieListener view;
   private CrawlieFrame frame;
 
   public CrawlieController() {
@@ -38,12 +39,12 @@ public class CrawlieController implements ActionListener, Observer {
     model = new CrawlieModel();
     view = new CrawlieView();
 
-    frame = new CrawlieFrame(view);
+    frame = new CrawlieFrame((CrawlieView) view);
 
-    model.addObserver(view);
+    model.addListener(view);
     Logger.getInstance().addObserver(this);
 
-    view.addController(this);
+    ((CrawlieView) view).addController(this);
   }
 
   /*
@@ -57,14 +58,21 @@ public class CrawlieController implements ActionListener, Observer {
     String sourceName = ((JComponent) e.getSource()).getName();
     Crawlie crawlie = new Crawlie();
     if (sourceName.equals(CrawlieView.START)) {
+      Logger.getInstance().status("Starting Crawlie!");
       crawlie.init();
       Config.getInstance().setPaused(false);
     } else if (sourceName.equals(CrawlieView.RESET)) {
+      Logger.getInstance().status("Resetting the crawler to its initial configuration...");
       crawlie = new Crawlie();
       Config.getInstance().setPaused(false);
-    } else if (sourceName.equals(CrawlieView.PAUSE)) {
+    } else if (sourceName.equals(CrawlieView.STOP)) {
+      Logger
+          .getInstance()
+          .status(
+              "Serialzing and storing the current data... Please wait while file workers finish downloading!");
       Config.getInstance().setPaused(true);
     } else if (sourceName.equals(CrawlieView.INITIALIZE_CACHE)) {
+      Logger.getInstance().status("Attempting to restore serialized data...");
       crawlie.initializeCachedData();
     }
   }
@@ -76,6 +84,16 @@ public class CrawlieController implements ActionListener, Observer {
 
   @Override
   public void update(Observable o, Object arg) {
-    model.setEntry((String) arg);
+    switch (((Message) arg).type) {
+      case ERROR:
+        model.addErrorMessage((Message) arg);
+        break;
+      case LOG:
+        model.addLogMessage((Message) arg);
+        break;
+      case STATUS:
+        model.addStatusMessage((Message) arg);
+        break;
+    }
   }
 }

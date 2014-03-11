@@ -8,7 +8,17 @@ import java.io.ObjectOutputStream;
 
 public class Serializer {
 
-  public static void serializeCurrentData(Object obj) {
+  private static Serializer instance;
+
+  private Serializer() {};
+
+  public synchronized static Serializer getInstance() {
+    if (instance == null)
+      instance = new Serializer();
+    return instance;
+  }
+
+  public void serializeCurrentData(Object obj) {
     try {
       ObjectOutputStream out =
           new ObjectOutputStream(new FileOutputStream(Config.getInstance().getSerializedFile()));
@@ -19,7 +29,7 @@ public class Serializer {
     }
   }
 
-  public static Object deserializeCurrentData() {
+  public Object deserializeCurrentData() {
     Object obj = null;
     try {
       ObjectInputStream in =

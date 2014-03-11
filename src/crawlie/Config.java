@@ -82,6 +82,7 @@ public class Config {
     prop = new Properties();
     try {
       prop.load(new FileInputStream(new File(path)));
+      Logger.getInstance().status("Loading config:\n " + prop.toString());
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -162,7 +163,6 @@ public class Config {
 
   public void setPaused(boolean paused) {
     this.paused = paused;
-    Logger.getInstance().log("PAUSED SET TO " + Boolean.toString(paused));
   }
 
   public String getSerializedFile() {

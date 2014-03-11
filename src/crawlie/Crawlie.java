@@ -29,18 +29,18 @@ public class Crawlie {
 
   /** Cache the current dataset to disk by serializing it */
   private void cacheCurrentData() {
-    Logger
-        .getInstance()
-        .log(
-            "Serialzing and storing the current data... Please wait while file workers finish downloading!");
     discoveredPages.onSerialize();
     Object[] objList = {discoveredPages, analyzedPages};
-    Serializer.serializeCurrentData(objList);
+    Serializer.getInstance().serializeCurrentData(objList);
+    Logger
+        .getInstance()
+        .status(
+            "Serialzing finished!");
   }
 
   /** Initialize the cached, serialized data, if possible */
   public void initializeCachedData() {
-    Object[] objList = (Object[]) Serializer.deserializeCurrentData();
+    Object[] objList = (Object[]) Serializer.getInstance().deserializeCurrentData();
     discoveredPages = (DiscoveredQueue) objList[0];
     discoveredPages.onDeserialize();
     analyzedPages = (AnalyzedPages) objList[1];
@@ -99,7 +99,7 @@ public class Crawlie {
       analyzedPages.dumpPages();
       startWorkers();
     }
-    Logger.getInstance().log(
+    Logger.getInstance().status(
         "Analyzed " + analyzedPages.size() + " pages, in " + (System.currentTimeMillis() - start)
             / 1000 + " seconds.");
   }
