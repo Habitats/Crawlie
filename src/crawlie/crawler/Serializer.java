@@ -1,6 +1,7 @@
 package crawlie.crawler;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -38,15 +39,15 @@ public class Serializer {
     }
   }
 
-  public Object deserializeCurrentData() {
+  public Object deserializeCurrentData() throws IOException {
     Object obj = null;
+    ObjectInputStream in;
     try {
-      ObjectInputStream in =
-          new ObjectInputStream(new FileInputStream(Config.getInstance().getSerializedFile()));
+      in = new ObjectInputStream(new FileInputStream(Config.getInstance().getSerializedFile()));
       obj = in.readObject();
       in.close();
     } catch (IOException | ClassNotFoundException e) {
-      e.printStackTrace();
+      throw new IOException(e);
     }
     return obj;
   }

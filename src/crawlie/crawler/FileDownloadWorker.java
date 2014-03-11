@@ -46,7 +46,7 @@ public class FileDownloadWorker implements Runnable {
         }
         out.close();
         in.close();
-        Logger.getInstance().log("Stored file: " + name);
+        Logger.getInstance().log("Downloaded > " + name);
       } catch (IOException e) {
         Logger.getInstance().error("Failed to download: " + file);
       }

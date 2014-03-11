@@ -56,8 +56,11 @@ public class AnalyzedPage extends AbstractPage {
       for (Element child : links) {
         // remove unecessary stuff from URL
         String url = child.attr("abs:href");
-        // if (!FileManager.getInstance().isFile(url))
-        addChildren(child, url);
+
+        // sometimes people put empty urls out onm the web. people are not always very smart
+        if (url.length() > 0) {
+          addChildren(child, url);
+        }
       }
       if (Config.getInstance().includeImages()) {
         Elements images = source.select("img[src]");
@@ -76,7 +79,6 @@ public class AnalyzedPage extends AbstractPage {
     // url = prefix + "//" + domain + url;
     if (!discoveredQueue.visited(url)) {
       AbstractPage newPage = PageFactory.createPage(url, this, analyzedPages, discoveredQueue);
-      discoveredQueue.addVisited(newPage);
       children.add(newPage);
     }
   }
@@ -94,5 +96,11 @@ public class AnalyzedPage extends AbstractPage {
     }
     // remove the source when analyzing is done to free up memory
     source = null;
+  }
+
+  @Override
+  public String toString() {
+    // TODO Auto-generated method stub
+    return "Analyzed > " + super.toString();
   }
 }

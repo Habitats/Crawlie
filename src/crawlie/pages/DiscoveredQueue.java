@@ -37,6 +37,8 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
   // helper structure due to MinMaxPriorityQueue not being serializable
   private List<DiscoveredPage> tempPages;
 
+  private long size;
+
   public DiscoveredQueue() {
     visited = new HashMap<String, Boolean>();
     pages = MinMaxPriorityQueue.maximumSize(MAX_SIZE).create();
@@ -72,6 +74,7 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
     }
 
     pages.add((DiscoveredPage) newPage);
+    addVisited(newPage);
 
     // notify waiting workers that the queue is no longer empty
     notifyAll();
@@ -79,6 +82,7 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
 
   public synchronized void addVisited(AbstractPage page) {
     visited.put(page.url, true);
+    size += 1;
   }
 
   public synchronized int size() {
@@ -93,6 +97,12 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
     tempPages = new ArrayList<DiscoveredPage>();
     tempPages.addAll(pages);
   }
+
+  /** the total amount of unique urls discovered */
+  public long getVisitedSize() {
+    return size;
+  }
+
 
   /**
    * Workaround method due to MinMaxPriorityQueue not being serializable. Put everything back in the

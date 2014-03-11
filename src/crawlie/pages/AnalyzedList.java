@@ -43,8 +43,10 @@ public class AnalyzedList implements Iterable<AnalyzedPage>, Serializable {
     return pages.iterator();
   }
 
-  // the dumping of pages could be implemented in severals ways. As of now it just returns a new
-  // list
+  /**
+   * the dumping of pages could be implemented in severals ways. As of now it just returns a new
+   * list
+   */
   public synchronized void dumpPages() {
     pages = new ArrayList<AnalyzedPage>();
   }

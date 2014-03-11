@@ -1,5 +1,6 @@
 package crawlie.crawler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import crawlie.Config;
@@ -20,6 +21,8 @@ public class CrawlerController {
   public CrawlerController() {
     crawlers = new ArrayList<CrawlerWorker>();
     db = new DatabaseController();
+    analyzedPages = new AnalyzedList();
+    discoveredPages = new DiscoveredQueue();
 
     /**
      * create a shutdown hook in order to store the state on shutdown DOES NOT WORK ON TERMINATE,
@@ -32,10 +35,15 @@ public class CrawlerController {
         cacheCurrentData();
       }
     }));
+
   }
 
-  /** Cache the current dataset to disk by serializing it */
+  /**
+   * Cache the current dataset to disk by serializing it
+   */
   private void cacheCurrentData() {
+    if (discoveredPages == null)
+      return;
     discoveredPages.onSerialize();
     Object[] objList = {discoveredPages, analyzedPages};
     Serializer.getInstance().serializeCurrentData(objList);
@@ -44,31 +52,35 @@ public class CrawlerController {
 
   /** Initialize the cached, serialized data, if possible */
   public void initializeCachedData() {
-    Object[] objList = (Object[]) Serializer.getInstance().deserializeCurrentData();
-    discoveredPages = (DiscoveredQueue) objList[0];
-    discoveredPages.onDeserialize();
-    analyzedPages = (AnalyzedList) objList[1];
+    Logger.getInstance().status("Attempting to deserialize cached data...");
+    Object[] objList;
+    try {
+      objList = (Object[]) Serializer.getInstance().deserializeCurrentData();
+      discoveredPages = (DiscoveredQueue) objList[0];
+      discoveredPages.onDeserialize();
+      analyzedPages = (AnalyzedList) objList[1];
 
-    // set paused to true in order to avoid disregarding the cached data
-    Config.getInstance().setPaused(true);
+      // set paused to true in order to avoid disregarding the cached data
+      Logger.getInstance().status("Deserialzing finished!");
+    } catch (IOException e) {
+      Logger.getInstance().status("Deserialzing failed! Possible corruption");
+    }
   }
 
   /** Initialize the web crawler! It will start off where it left off if in paused state */
   public void init() {
-    if (Config.getInstance().isPaused()) {
-      initializeCachedData();
-      Config.getInstance().setPaused(false);
-    } else {
-      analyzedPages = new AnalyzedList();
-      discoveredPages = new DiscoveredQueue();
-      DiscoveredPage seedPage =
-          new DiscoveredPage(Config.getInstance().getSeed(), null, analyzedPages, discoveredPages);
-      start = System.currentTimeMillis();
-      discoveredPages.add(seedPage);
-    }
+    start = System.currentTimeMillis();
 
     FileDownloadController.getInstance().initFileManager();
     startWorkers();
+
+    // add the seed page to the discovered list if it isn't already discovered. if it is discovered
+    // it means that it is using a cached dataset, thus the seed should not be visited again
+    if (!discoveredPages.visited(Config.getInstance().getSeed())) {
+      DiscoveredPage seedPage =
+          new DiscoveredPage(Config.getInstance().getSeed(), null, analyzedPages, discoveredPages);
+      discoveredPages.add(seedPage);
+    }
   }
 
   /**
@@ -96,16 +108,22 @@ public class CrawlerController {
   public synchronized void analyzeBatch() {
     if (!workersDone())
       return;
+    Logger.getInstance().status("Writing batch to database...");
     db.addPages(analyzedPages);
+    Logger.getInstance().status("Writing batch to database succeeded!");
     if (Config.getInstance().isPaused()) {
       cacheCurrentData();
     } else if (analyzedPages.size() < Config.getInstance().getMaxPages()) {
       analyzedPages.dumpPages();
       startWorkers();
     }
+    Logger.getInstance().status("Unique pages discovered: " + discoveredPages.getVisitedSize());
+    Logger.getInstance().status("Unique pages analyzed: " + analyzedPages.size());
     Logger.getInstance().status(
-        "Analyzed " + analyzedPages.size() + " pages, in " + (System.currentTimeMillis() - start)
-            / 1000 + " seconds.");
+        "Execution time: " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+
+    // unlock the GUI. yes i know, this is dirty, but it works
+    Config.getInstance().setGuiLock(false);
   }
 
   /** method for checking whether all the workers of a batch is done */

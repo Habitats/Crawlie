@@ -19,6 +19,10 @@ public class PageFactory {
     return new DiscoveredPage(url, parent, analyzedPages, discoveredQueue);
   }
 
+  /**
+   * converts discovredPages into analyzed instances. this is required whenever a discovered page is
+   * popped off the priority queue to be analyzed and expanded
+   */
   public static AbstractPage convertPage(AbstractPage page) {
     return new AnalyzedPage(page.url, page.parent, page.analyzedPages, page.discoveredQueue,
         page.priority);

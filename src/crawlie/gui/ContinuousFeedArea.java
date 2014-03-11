@@ -14,18 +14,22 @@ import javax.swing.text.Document;
 public class ContinuousFeedArea extends JTextPane {
   private static final long serialVersionUID = -3892971130305387962L;
 
-  private int maxLength = 200;
+  private int maxLength = 1000;
 
   public ContinuousFeedArea() {
     getDocument().addDocumentListener(new LimitLinesDocumentListener(maxLength));
   }
 
+  /**
+   * this yields some bugs since it isn't entirely thread safe. gogo swing and concurrency... but
+   * yeah. doesn't fail that often anyway, so lets just ignore exceptions for now TODO: fix this
+   */
   public synchronized void append(String str) {
     try {
       Document doc = getDocument();
       doc.insertString(doc.getLength(), str, null);
     } catch (BadLocationException e) {
-      e.printStackTrace();
+      // e.printStackTrace();
     }
   }
 

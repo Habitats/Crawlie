@@ -26,6 +26,7 @@ public class CrawlieGuiController implements ActionListener, Observer {
   private CrawlieModel model;
   private CrawlieListener view;
   private CrawlieFrame frame;
+  private CrawlerController crawlie;
 
   public CrawlieGuiController() {
     // set look and feel to the OS default over the standard java one (which frankly is quite ugly)
@@ -47,33 +48,47 @@ public class CrawlieGuiController implements ActionListener, Observer {
     ((CrawlieView) view).addController(this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+  /**
    */
   @Override
   public void actionPerformed(ActionEvent e) {
     System.out.println(e.getActionCommand());
     String sourceName = ((JComponent) e.getSource()).getName();
-    CrawlerController crawlie = new CrawlerController();
-    if (sourceName.equals(CrawlieView.START)) {
-      Logger.getInstance().status("Starting Crawlie!");
-      crawlie.init();
-      Config.getInstance().setPaused(false);
-    } else if (sourceName.equals(CrawlieView.RESET)) {
-      Logger.getInstance().status("Resetting the crawler to its initial configuration...");
-      crawlie = new CrawlerController();
-      Config.getInstance().setPaused(false);
-    } else if (sourceName.equals(CrawlieView.STOP)) {
+
+    if (Config.getInstance().isGuiLocked()) {
+      Logger.getInstance().status("Wait!");
+      return;
+    }
+    if (sourceName.equals(CrawlieView.STOP)) {
       Logger
           .getInstance()
           .status(
               "Serialzing and storing the current data... Please wait while file workers finish downloading!");
+
+      // pause the parser. the worker threads depend upon this variable and will try and finish
+      // their current workload before pausing
       Config.getInstance().setPaused(true);
-    } else if (sourceName.equals(CrawlieView.INITIALIZE_CACHE)) {
-      Logger.getInstance().status("Attempting to restore serialized data...");
-      crawlie.initializeCachedData();
+
+      // to avoid people clicking on stuff when they shouldn't click on stuff. crawler will
+      // automatically unlock when it's done
+      Config.getInstance().setGuiLock(true);
+    } else if (Config.getInstance().isPaused()) {
+      if (sourceName.equals(CrawlieView.START)) {
+        Logger.getInstance().status("Starting Crawlie!");
+        if (crawlie == null) {
+          crawlie = new CrawlerController();
+        }
+        Config.getInstance().setPaused(false);
+        crawlie.init();
+      } else if (sourceName.equals(CrawlieView.RESET)) {
+        Logger.getInstance().status("Resetting the crawler to its initial configuration...");
+        crawlie = new CrawlerController();
+      } else if (sourceName.equals(CrawlieView.INITIALIZE_CACHE)) {
+        crawlie = new CrawlerController();
+        crawlie.initializeCachedData();
+      }
+    } else {
+      Logger.getInstance().status("Action disabled while the crawler is running!");
     }
   }
 

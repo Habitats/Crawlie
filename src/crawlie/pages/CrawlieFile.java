@@ -18,11 +18,10 @@ public class CrawlieFile extends AbstractPage {
   @Override
   public void analyze() {
     FileDownloadController.getInstance().storeFile(super.url);
-    discoveredQueue.addVisited(this);
   }
 
   @Override
   public String toString() {
-    return "CRAWLIE FILE - " + super.toString();
+    return "Cached for download > " + super.toString();
   }
 }

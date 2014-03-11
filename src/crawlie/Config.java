@@ -9,6 +9,8 @@ import java.util.Properties;
 /**
  * Singleton to handle the configuration of the crawler
  * 
+ * It reads the configuration from a .properties file and stores the values in appropriate fields
+ * 
  * @author Patrick
  * 
  */
@@ -74,7 +76,9 @@ public class Config {
   private boolean cahceAncestors;
   private boolean guiEnabled;
 
-  private boolean paused = false;
+  private boolean paused = true;
+  private boolean guiLock = false;
+
   private String serializedFileName = "serialized.obj";
 
 
@@ -183,4 +187,13 @@ public class Config {
   public boolean guiEnabled() {
     return guiEnabled;
   }
+
+  public void setGuiLock(boolean guiLock) {
+    this.guiLock = guiLock;
+  }
+
+  public boolean isGuiLocked() {
+    return guiLock;
+  }
+
 }
