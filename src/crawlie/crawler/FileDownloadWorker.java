@@ -48,8 +48,11 @@ public class FileDownloadWorker implements Runnable {
     try {
 
       // create the folder if it doesn't already exsist
-      if (!new File(folder).exists()) {
+      File f = new File(folder);
+      if (!f.exists()) {
         new File(folder);
+        f.mkdirs();
+        f.createNewFile();
       }
       // create a stream to the internet
       InputStream in = (new URL(url)).openStream();
@@ -68,6 +71,7 @@ public class FileDownloadWorker implements Runnable {
       Logger.getInstance().log("Downloaded > " + fileName);
     } catch (IOException e) {
       Logger.getInstance().error("Failed to download: " + url);
+      // e.printStackTrace();
     }
   }
 }

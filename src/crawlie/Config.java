@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import javax.swing.JOptionPane;
+
 /**
  * Singleton to handle the configuration of the crawler
  * 
@@ -97,7 +99,9 @@ public class Config {
     try {
       prop.load(new FileInputStream(new File(path)));
     } catch (IOException e) {
-      e.printStackTrace();
+      // e.printStackTrace();
+      JOptionPane.showMessageDialog(null, "Missing crawlie.properties file!");
+      System.exit(0);
     }
     return prop;
   }

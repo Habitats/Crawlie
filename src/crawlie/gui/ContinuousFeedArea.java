@@ -41,7 +41,7 @@ public class ContinuousFeedArea extends JScrollPane {
       Document doc = pane.getDocument();
       doc.insertString(doc.getLength(), str, null);
     } catch (BadLocationException e) {
-      e.printStackTrace();
+//      e.printStackTrace();
     }
   }
 

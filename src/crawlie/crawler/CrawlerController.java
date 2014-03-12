@@ -56,9 +56,16 @@ public class CrawlerController {
     if (discoveredPages == null)
       return;
     discoveredPages.onSerialize();
-    Object[] objList = {discoveredPages, analyzedPages};
-    Serializer.getInstance().serializeCurrentData(objList);
-    Logger.getInstance().status("Serialzing finished!");
+    // not pretty, but it's a trivial way of making sure that all objects are locked before
+    // serializing them!
+    synchronized (analyzedPages) {
+      synchronized (discoveredPages) {
+        Object[] objList = {discoveredPages, analyzedPages};
+        Serializer.getInstance().serializeCurrentData(objList);
+        Logger.getInstance().status("Serialzing finished!");
+      }
+
+    }
   }
 
   /** Initialize the cached, serialized data, if possible */
@@ -129,9 +136,11 @@ public class CrawlerController {
   public synchronized void analyzeBatch() {
     if (!workersDone())
       return;
-    Logger.getInstance().status("Writing batch to database...");
-    db.addPages(analyzedPages);
-    Logger.getInstance().status("Writing batch to database succeeded!");
+    if (Config.getInstance().storeContent()) {
+      Logger.getInstance().status("Writing batch to database...");
+      db.addPages(analyzedPages);
+      Logger.getInstance().status("Writing batch to database succeeded!");
+    }
     if (Config.getInstance().isPaused()) {
       cacheCurrentData();
     } else if (analyzedPages.size() < Config.getInstance().getMaxPages()) {
