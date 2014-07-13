@@ -3,7 +3,8 @@ files/
 *.db
 *.cfg
 *.obj
-
+.idea
+*.iml
 
 ####################### Eclipse ################################
 *.pydevproject
