@@ -8,9 +8,8 @@ import crawlie.Message;
 
 /**
  * Model for the GUI
- * 
+ *
  * @author Patrick
- * 
  */
 public class CrawlieModel implements CrawlieListener {
 

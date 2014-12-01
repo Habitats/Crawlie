@@ -12,15 +12,15 @@ import crawlie.Logger;
 
 
 /**
- * Worker class for downloading files and storing themn in a desired directory. Having only one
- * thread doing this is painfully slow.
- * 
+ * Worker class for downloading files and storing themn in a desired directory. Having only one thread doing this is
+ * painfully slow.
+ *
  * Workers work according to the producer/consumer principle
- * 
+ *
  * @author Patrick
- * 
  */
 public class FileDownloadWorker implements Runnable {
+
   private String folder;
   private FileDownloadController fileManager;
 
@@ -61,7 +61,7 @@ public class FileDownloadWorker implements Runnable {
       OutputStream out = new BufferedOutputStream(new FileOutputStream(folder + fileName));
 
       // download the file and write it to disk
-      for (int b; (b = in.read()) != -1;) {
+      for (int b; (b = in.read()) != -1; ) {
         out.write(b);
       }
 

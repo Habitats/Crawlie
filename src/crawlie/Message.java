@@ -4,11 +4,11 @@ import java.text.SimpleDateFormat;
 
 /**
  * Data class for messages. Rather self explanatory
- * 
+ *
  * @author Patrick
- * 
  */
 public class Message {
+
   public enum Type {
     STATUS, LOG, ERROR;
   }

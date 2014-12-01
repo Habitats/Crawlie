@@ -1,25 +1,26 @@
 package crawlie.gui;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
 
 /**
  * HELPER CLASS FOR DOCUMENTS
- * 
+ *
  * A class to control the maximum number of lines to be stored in a Document
- * 
+ *
  * Excess lines can be removed from the start or end of the Document depending on your requirement.
- * 
- * a) if you append text to the Document, then you would want to remove lines from the start. b) if
- * you insert text at the beginning of the Document, then you would want to remove lines from the
- * end.
- * 
- * @author Rob Camick on October 15, 2008,
- *         http://tips4java.wordpress.com/2008/10/15/limit-lines-in-document/
- * 
+ *
+ * a) if you append text to the Document, then you would want to remove lines from the start. b) if you insert text at
+ * the beginning of the Document, then you would want to remove lines from the end.
+ *
+ * @author Rob Camick on October 15, 2008, http://tips4java.wordpress.com/2008/10/15/limit-lines-in-document/
  */
 public class LimitLinesDocumentListener implements DocumentListener {
+
   private int maximumLines;
   private boolean isRemoveFromStart;
 
@@ -75,10 +76,12 @@ public class LimitLinesDocumentListener implements DocumentListener {
   }
 
   @Override
-  public void removeUpdate(DocumentEvent e) {}
+  public void removeUpdate(DocumentEvent e) {
+  }
 
   @Override
-  public void changedUpdate(DocumentEvent e) {}
+  public void changedUpdate(DocumentEvent e) {
+  }
 
   /*
    * Remove lines from the Document when necessary

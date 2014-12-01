@@ -13,15 +13,14 @@ import crawlie.pages.PageFactory;
 
 /**
  * The actual meat of the crawler
- * 
- * The controller will control a set of crawler workers that will crawl the web in parallell while
- * adding and analyzing pages up against two common/shared datasets, one for the pages (urls)
- * discovered, and one for the ones analyzed
- * 
+ *
+ * The controller will control a set of crawler workers that will crawl the web in parallell while adding and analyzing
+ * pages up against two common/shared datasets, one for the pages (urls) discovered, and one for the ones analyzed
+ *
  * @author Patrick
- * 
  */
 public class CrawlerController {
+
   private AnalyzedList analyzedPages;
   private DiscoveredQueue discoveredPages;
 
@@ -53,8 +52,9 @@ public class CrawlerController {
    * Cache the current dataset to disk by serializing it
    */
   private void cacheCurrentData() {
-    if (discoveredPages == null)
+    if (discoveredPages == null) {
       return;
+    }
     discoveredPages.onSerialize();
     // not pretty, but it's a trivial way of making sure that all objects are locked before
     // serializing them!
@@ -68,7 +68,9 @@ public class CrawlerController {
     }
   }
 
-  /** Initialize the cached, serialized data, if possible */
+  /**
+   * Initialize the cached, serialized data, if possible
+   */
   public void initializeCachedData() {
     Logger.getInstance().status("Attempting to deserialize cached data...");
     Object[] objList;
@@ -87,7 +89,9 @@ public class CrawlerController {
     }
   }
 
-  /** Initialize the web crawler! */
+  /**
+   * Initialize the web crawler!
+   */
   public void initialize() {
     // keep track of when the crawler started in order to calculate total execution time
     start = System.currentTimeMillis();
@@ -98,14 +102,16 @@ public class CrawlerController {
     // add the seed page to the discovered list if it isn't already discovered. if it is discovered
     // it means that it is using a cached dataset, thus the seed should not be visited again
     if (!discoveredPages.visited(Config.getInstance().getSeed())) {
-      DiscoveredPage seedPage = (DiscoveredPage) PageFactory.createPage(Config.getInstance().getSeed(), null, analyzedPages, discoveredPages);
+      DiscoveredPage
+          seedPage =
+          (DiscoveredPage) PageFactory.createPage(Config.getInstance().getSeed(), null, analyzedPages, discoveredPages);
       discoveredPages.add(seedPage);
     }
   }
 
   /**
-   * Start the crawler workers. these workers will pop the discovered page (URL) with the highest
-   * priority and add its children to the discovered queue
+   * Start the crawler workers. these workers will pop the discovered page (URL) with the highest priority and add its
+   * children to the discovered queue
    */
   private void startCrawlerWorkers() {
     for (int i = 0; i < Config.getInstance().getMaxWorkers(); i++) {
@@ -117,8 +123,8 @@ public class CrawlerController {
   }
 
   /**
-   * start the file download workers. these will wait for files to be added to a download queue,
-   * then start processing them in parallell
+   * start the file download workers. these will wait for files to be added to a download queue, then start processing
+   * them in parallell
    */
   private void startFileDownloadWorkers() {
     FileDownloadController.getInstance().initFileManager();
@@ -132,10 +138,13 @@ public class CrawlerController {
     return discoveredPages;
   }
 
-  /** this gets called when all workers in a batch are done */
+  /**
+   * this gets called when all workers in a batch are done
+   */
   public synchronized void analyzeBatch() {
-    if (!workersDone())
+    if (!workersDone()) {
       return;
+    }
     if (Config.getInstance().storeContent()) {
       Logger.getInstance().status("Writing batch to database...");
       db.addPages(analyzedPages);
@@ -155,7 +164,9 @@ public class CrawlerController {
     Config.getInstance().setGuiLock(false);
   }
 
-  /** method for checking whether all the workers of a batch is done */
+  /**
+   * method for checking whether all the workers of a batch is done
+   */
   private boolean workersDone() {
     return crawlers.isEmpty();
   }

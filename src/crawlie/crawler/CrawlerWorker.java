@@ -7,9 +7,8 @@ import crawlie.pages.PageFactory;
 
 /**
  * Worker crawler class implemented according to the consumer/producer principle
- * 
+ *
  * @author Patrick
- * 
  */
 public class CrawlerWorker implements Runnable {
 
@@ -23,8 +22,9 @@ public class CrawlerWorker implements Runnable {
   public void run() {
     this.crawlie.addWorker(this);
     while (crawlie.getAnalyzedPages().cacheSize() < Config.getInstance().getCacheInterval()) {
-      if (Config.getInstance().isPaused())
+      if (Config.getInstance().isPaused()) {
         break;
+      }
 
       // try to fetch a new page from the discovered priority queue, if empty, thread will wait
       // until something is pushed in the queue

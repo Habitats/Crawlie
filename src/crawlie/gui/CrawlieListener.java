@@ -4,8 +4,8 @@ import crawlie.Message;
 
 /**
  * Interface for message events
+ *
  * @author Patrick
- * 
  */
 public interface CrawlieListener {
 

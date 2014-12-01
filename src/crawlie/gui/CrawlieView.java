@@ -1,19 +1,18 @@
 package crawlie.gui;
 
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import java.awt.*;
+
+import javax.swing.*;
+
 import crawlie.Message;
 
 /**
- * The actual configuration of the GUI is in this class. It implements a listener interface in order
- * to get information
- * 
+ * The actual configuration of the GUI is in this class. It implements a listener interface in order to get information
+ *
  * @author Patrick
- * 
  */
 public class CrawlieView extends JPanel implements CrawlieListener {
+
   private static final long serialVersionUID = -8336882687395127678L;
 
   public static final String START = "START";
@@ -43,7 +42,6 @@ public class CrawlieView extends JPanel implements CrawlieListener {
     statusArea = new ContinuousFeedArea();
     errorArea = new ContinuousFeedArea();
     logArea = new ContinuousFeedArea();
-
 
     setLayout(new GridBagLayout());
     Dimension dim = new Dimension(800, 500);

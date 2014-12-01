@@ -8,25 +8,26 @@ import crawlie.Config;
 
 /**
  * Singleton for general purpose file utility methods
- * 
+ *
  * It holds a set of file workers that will take an url and store them on the disk accordingly
- * 
- * It is created as a singleton because it will make no sense to have multiple download controllers
- * running
- * 
+ *
+ * It is created as a singleton because it will make no sense to have multiple download controllers running
+ *
  * @author Patrick
- * 
  */
 public class FileDownloadController {
+
   private static FileDownloadController instance;
 
   public synchronized static FileDownloadController getInstance() {
-    if (instance == null)
+    if (instance == null) {
       instance = new FileDownloadController();
+    }
     return instance;
   }
 
-  private FileDownloadController() {}
+  private FileDownloadController() {
+  }
 
   // ########### SINGLETON #######################################
 
@@ -43,7 +44,9 @@ public class FileDownloadController {
     }
   }
 
-  /** add a file to the cache and notify one waiting worker */
+  /**
+   * add a file to the cache and notify one waiting worker
+   */
   public synchronized void addFileToDownloadQueue(String file) {
     fileDownloadQueue.add(file);
     notify();
@@ -53,11 +56,12 @@ public class FileDownloadController {
    * returns the first item added to the queue. if empty, wait for the queue to fill up
    */
   public synchronized String getUrlFromDownloadQueue() {
-    while (fileDownloadQueue.isEmpty())
+    while (fileDownloadQueue.isEmpty()) {
       try {
         wait();
       } catch (InterruptedException e) {
       }
+    }
     return fileDownloadQueue.poll();
   }
 

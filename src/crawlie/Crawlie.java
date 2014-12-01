@@ -5,11 +5,11 @@ import crawlie.gui.CrawlieGuiController;
 
 /**
  * Main class for Crawlie
- * 
+ *
  * @author Patrick
- * 
  */
 public class Crawlie {
+
   public static void main(String[] args) {
     if (Config.getInstance().guiEnabled()) {
       // start a resumable instance with GUI

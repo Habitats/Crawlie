@@ -10,13 +10,11 @@ import java.sql.Statement;
 import crawlie.Config;
 
 /**
- * Database connection class. This is the only class that should communicate directly with the
- * database.
- * 
+ * Database connection class. This is the only class that should communicate directly with the database.
+ *
  * Tested with sqlite only, however, it should work with mysql as well
- * 
+ *
  * @author Patrick
- * 
  */
 public class DatabaseConnection {
 
@@ -53,10 +51,11 @@ public class DatabaseConnection {
 
     try {
       Class.forName(jdbcDriver);
-      if (user.length() > 0 && password.length() > 0)
+      if (user.length() > 0 && password.length() > 0) {
         conn = DriverManager.getConnection(url, user, password);
-      else
+      } else {
         conn = DriverManager.getConnection(url);
+      }
     } catch (SQLException | ClassNotFoundException e) {
       e.printStackTrace();
     }

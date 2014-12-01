@@ -1,25 +1,23 @@
 package crawlie.pages;
 
-import java.util.ArrayList;
-
-import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import crawlie.Config;
 import crawlie.Logger;
-import crawlie.pages.AbstractPage;
 
 /**
- * Pages that are analyzed are stored as an instance of this class and cached until they are written
- * to the database
- * 
+ * Pages that are analyzed are stored as an instance of this class and cached until they are written to the database
+ *
  * @author Patrick
- * 
  */
 public class AnalyzedPage extends AbstractPage {
+
   private static final long serialVersionUID = -4212043927105278607L;
 
   // Document isn't serializable
@@ -29,7 +27,8 @@ public class AnalyzedPage extends AbstractPage {
 
   private ArrayList<AbstractPage> children;
 
-  public AnalyzedPage(String url, AbstractPage parent, AnalyzedList analyzedPage, DiscoveredQueue discoveredPages, int priority) {
+  public AnalyzedPage(String url, AbstractPage parent, AnalyzedList analyzedPage, DiscoveredQueue discoveredPages,
+                      int priority) {
     super(url, parent, analyzedPage, discoveredPages);
     super.priority = priority;
     String title = "No title";
@@ -82,7 +81,7 @@ public class AnalyzedPage extends AbstractPage {
 
   /**
    * Add the element/url to its parents list. as of now only the url is added.
-   * 
+   *
    * From this URL, create a new page instance, and link it to its parent, creating a tree-structure
    */
   private void addChildren(String url) {
@@ -94,8 +93,9 @@ public class AnalyzedPage extends AbstractPage {
 
   @Override
   public void analyze() {
-    if (source == null)
+    if (source == null) {
       return;
+    }
     // add this page to the set of analyzed pages
     analyzedPages.add(this);
 

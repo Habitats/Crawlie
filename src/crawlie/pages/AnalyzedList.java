@@ -7,13 +7,13 @@ import java.util.Iterator;
 import crawlie.Config;
 
 /**
- * Data structure to hold pages that are already analyzed and cache them in memory until they are
- * (pariodically) written the database
- * 
+ * Data structure to hold pages that are already analyzed and cache them in memory until they are (pariodically) written
+ * the database
+ *
  * @author Patrick
- * 
  */
 public class AnalyzedList implements Iterable<AnalyzedPage>, Serializable {
+
   private static final long serialVersionUID = 6891988595063879461L;
 
   private ArrayList<AnalyzedPage> pages;
@@ -44,8 +44,7 @@ public class AnalyzedList implements Iterable<AnalyzedPage>, Serializable {
   }
 
   /**
-   * the dumping of pages could be implemented in severals ways. As of now it just returns a new
-   * list
+   * the dumping of pages could be implemented in severals ways. As of now it just returns a new list
    */
   public synchronized void dumpPages() {
     pages = new ArrayList<AnalyzedPage>();

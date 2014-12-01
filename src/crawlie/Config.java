@@ -6,15 +6,14 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /**
- * Singleton to handle the configuration of the crawler
- * 
+ * Singleton to handle the configuration of the crawler.
+ *
  * It reads the configuration from a .properties file and stores the values in appropriate fields
- * 
+ *
  * @author Patrick
- * 
  */
 public class Config {
 
@@ -50,8 +49,9 @@ public class Config {
   }
 
   public synchronized static Config getInstance() {
-    if (instance == null)
+    if (instance == null) {
       instance = new Config();
+    }
     return instance;
   }
 
@@ -90,7 +90,6 @@ public class Config {
   private String serializedFileName = "serialized.obj";
 
 
-
   /**
    * Load the config from the properties file
    */
@@ -106,7 +105,9 @@ public class Config {
     return prop;
   }
 
-  /** Post the current config to the log in a readable format */
+  /**
+   * Post the current config to the log in a readable format
+   */
   public void announceConfig() {
     Enumeration e = prop.propertyNames();
     Logger.getInstance().status("LOADING CONFIG...");

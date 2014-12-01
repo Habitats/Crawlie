@@ -3,12 +3,12 @@ package crawlie.pages;
 import java.io.Serializable;
 
 /**
- * When a discovered page (image, html etc) is cached, it is stored as an instance of a subclass of
- * this class
- * 
+ * When a discovered page (image, html etc) is cached, it is stored as an instance of a subclass of this class
+ *
  * @author Patrick
  */
 public abstract class AbstractPage implements Serializable {
+
   private static final long serialVersionUID = 4547183824431052054L;
 
   // final, immuatable fields
@@ -58,10 +58,10 @@ public abstract class AbstractPage implements Serializable {
 
   /**
    * what to do when popping a page instance off the priority queue.
-   * 
-   * if its an image -> download, html page -> expand its children, discovered new page -> add it to
-   * the priority queue, etc
-   * 
+   *
+   * if its an image -> download, html page -> expand its children, discovered new page -> add it to the priority queue,
+   * etc
+   *
    * see subclasses for explicit implementations
    */
   public abstract void analyze();

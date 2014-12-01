@@ -1,26 +1,25 @@
 package crawlie.pages;
 
+import com.google.common.collect.MinMaxPriorityQueue;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.common.collect.MinMaxPriorityQueue;
-
 import crawlie.Config;
 
 /**
- * Data structure that inherits properties from hashmap and priority queue. It ensures unique
- * entries.
- * 
- * It utilizes a MinMaxPriorityQueue from the google guava library due to the lack of a data
- * structure with similar capabilities in the standard lib
- * 
+ * Data structure that inherits properties from hashmap and priority queue. It ensures unique entries.
+ *
+ * It utilizes a MinMaxPriorityQueue from the google guava library due to the lack of a data structure with similar
+ * capabilities in the standard lib
+ *
  * @author Patrick
- * 
  */
 public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
+
   private static final long serialVersionUID = -8067373472278549730L;
 
   // keeps track of which urls that have been visited this crawler session
@@ -45,24 +44,27 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
   }
 
   /**
-   * checks if the given url has been visited before, during this crawler session. there's no point
-   * in going the same place twice
+   * checks if the given url has been visited before, during this crawler session. there's no point in going the same
+   * place twice
    */
   public synchronized boolean visited(String url) {
     return visited.get(url) != null;
   }
 
-  /** pop the page with the highest priority from the queue */
+  /**
+   * pop the page with the highest priority from the queue
+   */
   public synchronized AbstractPage pop() {
     AbstractPage page;
 
-    while (pages.size() == 0)
+    while (pages.size() == 0) {
       try {
         // quque empty, wait for it to fill up
         wait();
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
+    }
     page = pages.pollFirst();
     return page;
   }
@@ -89,15 +91,17 @@ public class DiscoveredQueue implements Iterable<DiscoveredPage>, Serializable {
   }
 
   /**
-   * Workaround method due to MinMaxPriorityQueue not being serializable. Store everything
-   * temporarily in a "normal" list
+   * Workaround method due to MinMaxPriorityQueue not being serializable. Store everything temporarily in a "normal"
+   * list
    */
   public void onSerialize() {
     tempPages = new ArrayList<DiscoveredPage>();
     tempPages.addAll(pages);
   }
 
-  /** the total amount of unique urls discovered */
+  /**
+   * the total amount of unique urls discovered
+   */
   public long getVisitedSize() {
     return size;
   }

@@ -4,21 +4,22 @@ import java.util.Observable;
 
 /**
  * Logger class. Sysouts mid code is bad!
- * 
+ *
  * Used to delegate messages to the GUI etc
- * 
+ *
  * @author Patrick
- * 
  */
 public class Logger extends Observable {
+
   private int logNumber = 1;
   private int errorNumber = 1;
   private int statusNumber = 1;
   private static Logger instance;
 
   public static Logger getInstance() {
-    if (instance == null)
+    if (instance == null) {
       instance = new Logger();
+    }
     return instance;
   }
 

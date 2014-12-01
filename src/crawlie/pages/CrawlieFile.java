@@ -4,9 +4,8 @@ import crawlie.crawler.FileDownloadController;
 
 /**
  * Whenever a non-html file is cached for download, it is stored as an instance of this class
- * 
+ *
  * @author Patrick
- * 
  */
 public class CrawlieFile extends AbstractPage {
 

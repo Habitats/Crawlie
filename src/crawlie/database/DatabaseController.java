@@ -3,16 +3,16 @@ package crawlie.database;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import crawlie.pages.AnalyzedPage;
 import crawlie.pages.AnalyzedList;
+import crawlie.pages.AnalyzedPage;
 
 /**
  * Database queries happens here, nowhere else!
- * 
+ *
  * @author Patrick
- * 
  */
 public class DatabaseController {
+
   private DatabaseConnection conn;
 
   public DatabaseController() {
@@ -24,23 +24,20 @@ public class DatabaseController {
 
   /**
    * Add a single page to the database
-   * 
-   * @param page
    */
   public void addPage(AnalyzedPage page) {
 
     try {
-      conn.execute(String.format("insert into crawlie values (%s,%s,%s,%s,%s)", page.title, page.url, page.domain, page.source, page.getPriority()));
+      conn.execute(String.format("insert into crawlie values (%s,%s,%s,%s,%s)", page.title, page.url, page.domain,
+                                 page.source, page.getPriority()));
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
   /**
-   * Add a list of pages to the database through prepared statemenets. This is way more efficient
-   * than doing single calls
-   * 
-   * @param pages
+   * Add a list of pages to the database through prepared statemenets. This is way more efficient than doing single
+   * calls
    */
   public void addPages(AnalyzedList pages) {
     String insertQuery = "insert into crawlie (title,url,domain,source, priority) values (?,?,?,?,?)";

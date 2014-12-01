@@ -9,21 +9,24 @@ import java.io.ObjectOutputStream;
 import crawlie.Config;
 
 /**
- * Serializer class giving the crawler the option to cache its current data to disk, in order to
- * resume its business when restarted
- * 
+ * Serializer class giving the crawler the option to cache its current data to disk, in order to resume its business
+ * when restarted
+ *
  * @author Patrick
- * 
  */
 public class Serializer {
 
   private static Serializer instance;
 
-  private Serializer() {};
+  private Serializer() {
+  }
+
+  ;
 
   public synchronized static Serializer getInstance() {
-    if (instance == null)
+    if (instance == null) {
       instance = new Serializer();
+    }
     return instance;
   }
 
